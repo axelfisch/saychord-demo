@@ -1,0 +1,436 @@
+{
+  "tonalites": {
+    "C": {
+      "nom_fr": "Do",
+      "nom_en": "C",
+      "accords": [
+        {
+          "nom": "Cmaj7",
+          "nom_fr": "Do majeur septième",
+          "notes": ["C", "E", "G", "B"],
+          "aliases": ["Cmaj7", "CΔ7", "CM7", "Cmaj7"],
+          "categorie": "majeur",
+          "description": "Accord majeur avec septième majeure"
+        },
+        {
+          "nom": "Cmin7",
+          "nom_fr": "Do mineur septième",
+          "notes": ["C", "Eb", "G", "Bb"],
+          "aliases": ["Cm7", "C-7", "Cmin7"],
+          "categorie": "mineur",
+          "description": "Accord mineur avec septième mineure"
+        },
+        {
+          "nom": "C7",
+          "nom_fr": "Do septième",
+          "notes": ["C", "E", "G", "Bb"],
+          "aliases": ["C7", "Cdom7"],
+          "categorie": "dominant",
+          "description": "Accord majeur avec septième mineure (dominant)"
+        },
+        {
+          "nom": "Cm7b5",
+          "nom_fr": "Do mineur septième quinte bémol",
+          "notes": ["C", "Eb", "Gb", "Bb"],
+          "aliases": ["Cm7b5", "Cø", "Cø7", "C-7b5"],
+          "categorie": "demi-diminué",
+          "description": "Accord mineur avec septième mineure et quinte diminuée"
+        },
+        {
+          "nom": "Cdim7",
+          "nom_fr": "Do diminué septième",
+          "notes": ["C", "Eb", "Gb", "A"],
+          "aliases": ["Cdim7", "C°7", "C°"],
+          "categorie": "diminué",
+          "description": "Accord diminué avec septième diminuée"
+        },
+        {
+          "nom": "Csus4",
+          "nom_fr": "Do suspendu quatre",
+          "notes": ["C", "F", "G"],
+          "aliases": ["Csus4", "Csus"],
+          "categorie": "suspendu",
+          "description": "Accord avec quarte à la place de la tierce"
+        },
+        {
+          "nom": "C6",
+          "nom_fr": "Do sixième",
+          "notes": ["C", "E", "G", "A"],
+          "aliases": ["C6", "Cmaj6"],
+          "categorie": "majeur",
+          "description": "Accord majeur avec sixte ajoutée"
+        },
+        {
+          "nom": "Cm6",
+          "nom_fr": "Do mineur sixième",
+          "notes": ["C", "Eb", "G", "A"],
+          "aliases": ["Cm6", "C-6"],
+          "categorie": "mineur",
+          "description": "Accord mineur avec sixte ajoutée"
+        },
+        {
+          "nom": "Caug",
+          "nom_fr": "Do augmenté",
+          "notes": ["C", "E", "G#"],
+          "aliases": ["Caug", "C+", "C+5"],
+          "categorie": "augmenté",
+          "description": "Accord avec quinte augmentée"
+        },
+        {
+          "nom": "Cmaj9",
+          "nom_fr": "Do majeur neuvième",
+          "notes": ["C", "E", "G", "B", "D"],
+          "aliases": ["Cmaj9", "CΔ9", "CM9"],
+          "categorie": "majeur",
+          "description": "Accord majeur avec septième majeure et neuvième"
+        },
+        {
+          "nom": "C9",
+          "nom_fr": "Do neuvième",
+          "notes": ["C", "E", "G", "Bb", "D"],
+          "aliases": ["C9", "Cdom9"],
+          "categorie": "dominant",
+          "description": "Accord dominant avec neuvième"
+        },
+        {
+          "nom": "Cm9",
+          "nom_fr": "Do mineur neuvième",
+          "notes": ["C", "Eb", "G", "Bb", "D"],
+          "aliases": ["Cm9", "C-9"],
+          "categorie": "mineur",
+          "description": "Accord mineur avec septième et neuvième"
+        }
+      ]
+    },
+    "Db": {
+      "nom_fr": "Ré bémol",
+      "nom_en": "Db",
+      "accords": [
+        {
+          "nom": "Dbmaj7",
+          "nom_fr": "Ré bémol majeur septième",
+          "notes": ["Db", "F", "Ab", "C"],
+          "aliases": ["Dbmaj7", "DbΔ7", "DbM7", "C#maj7", "C#Δ7", "C#M7"],
+          "categorie": "majeur",
+          "description": "Accord majeur avec septième majeure"
+        },
+        {
+          "nom": "Dbmin7",
+          "nom_fr": "Ré bémol mineur septième",
+          "notes": ["Db", "E", "Ab", "B"],
+          "aliases": ["Dbm7", "Db-7", "Dbmin7", "C#m7", "C#-7", "C#min7"],
+          "categorie": "mineur",
+          "description": "Accord mineur avec septième mineure"
+        },
+        {
+          "nom": "Db7",
+          "nom_fr": "Ré bémol septième",
+          "notes": ["Db", "F", "Ab", "B"],
+          "aliases": ["Db7", "Dbdom7", "C#7", "C#dom7"],
+          "categorie": "dominant",
+          "description": "Accord majeur avec septième mineure (dominant)"
+        }
+      ]
+    },
+    "D": {
+      "nom_fr": "Ré",
+      "nom_en": "D",
+      "accords": [
+        {
+          "nom": "Dmaj7",
+          "nom_fr": "Ré majeur septième",
+          "notes": ["D", "F#", "A", "C#"],
+          "aliases": ["Dmaj7", "DΔ7", "DM7"],
+          "categorie": "majeur",
+          "description": "Accord majeur avec septième majeure"
+        },
+        {
+          "nom": "Dmin7",
+          "nom_fr": "Ré mineur septième",
+          "notes": ["D", "F", "A", "C"],
+          "aliases": ["Dm7", "D-7", "Dmin7"],
+          "categorie": "mineur",
+          "description": "Accord mineur avec septième mineure"
+        },
+        {
+          "nom": "D7",
+          "nom_fr": "Ré septième",
+          "notes": ["D", "F#", "A", "C"],
+          "aliases": ["D7", "Ddom7"],
+          "categorie": "dominant",
+          "description": "Accord majeur avec septième mineure (dominant)"
+        }
+      ]
+    },
+    "Eb": {
+      "nom_fr": "Mi bémol",
+      "nom_en": "Eb",
+      "accords": [
+        {
+          "nom": "Ebmaj7",
+          "nom_fr": "Mi bémol majeur septième",
+          "notes": ["Eb", "G", "Bb", "D"],
+          "aliases": ["Ebmaj7", "EbΔ7", "EbM7", "D#maj7", "D#Δ7", "D#M7"],
+          "categorie": "majeur",
+          "description": "Accord majeur avec septième majeure"
+        },
+        {
+          "nom": "Ebmin7",
+          "nom_fr": "Mi bémol mineur septième",
+          "notes": ["Eb", "Gb", "Bb", "Db"],
+          "aliases": ["Ebm7", "Eb-7", "Ebmin7", "D#m7", "D#-7", "D#min7"],
+          "categorie": "mineur",
+          "description": "Accord mineur avec septième mineure"
+        },
+        {
+          "nom": "Eb7",
+          "nom_fr": "Mi bémol septième",
+          "notes": ["Eb", "G", "Bb", "Db"],
+          "aliases": ["Eb7", "Ebdom7", "D#7", "D#dom7"],
+          "categorie": "dominant",
+          "description": "Accord majeur avec septième mineure (dominant)"
+        }
+      ]
+    },
+    "E": {
+      "nom_fr": "Mi",
+      "nom_en": "E",
+      "accords": [
+        {
+          "nom": "Emaj7",
+          "nom_fr": "Mi majeur septième",
+          "notes": ["E", "G#", "B", "D#"],
+          "aliases": ["Emaj7", "EΔ7", "EM7"],
+          "categorie": "majeur",
+          "description": "Accord majeur avec septième majeure"
+        },
+        {
+          "nom": "Emin7",
+          "nom_fr": "Mi mineur septième",
+          "notes": ["E", "G", "B", "D"],
+          "aliases": ["Em7", "E-7", "Emin7"],
+          "categorie": "mineur",
+          "description": "Accord mineur avec septième mineure"
+        },
+        {
+          "nom": "E7",
+          "nom_fr": "Mi septième",
+          "notes": ["E", "G#", "B", "D"],
+          "aliases": ["E7", "Edom7"],
+          "categorie": "dominant",
+          "description": "Accord majeur avec septième mineure (dominant)"
+        }
+      ]
+    },
+    "F": {
+      "nom_fr": "Fa",
+      "nom_en": "F",
+      "accords": [
+        {
+          "nom": "Fmaj7",
+          "nom_fr": "Fa majeur septième",
+          "notes": ["F", "A", "C", "E"],
+          "aliases": ["Fmaj7", "FΔ7", "FM7"],
+          "categorie": "majeur",
+          "description": "Accord majeur avec septième majeure"
+        },
+        {
+          "nom": "Fmin7",
+          "nom_fr": "Fa mineur septième",
+          "notes": ["F", "Ab", "C", "Eb"],
+          "aliases": ["Fm7", "F-7", "Fmin7"],
+          "categorie": "mineur",
+          "description": "Accord mineur avec septième mineure"
+        },
+        {
+          "nom": "F7",
+          "nom_fr": "Fa septième",
+          "notes": ["F", "A", "C", "Eb"],
+          "aliases": ["F7", "Fdom7"],
+          "categorie": "dominant",
+          "description": "Accord majeur avec septième mineure (dominant)"
+        }
+      ]
+    },
+    "Gb": {
+      "nom_fr": "Sol bémol",
+      "nom_en": "Gb",
+      "accords": [
+        {
+          "nom": "Gbmaj7",
+          "nom_fr": "Sol bémol majeur septième",
+          "notes": ["Gb", "Bb", "Db", "F"],
+          "aliases": ["Gbmaj7", "GbΔ7", "GbM7", "F#maj7", "F#Δ7", "F#M7"],
+          "categorie": "majeur",
+          "description": "Accord majeur avec septième majeure"
+        },
+        {
+          "nom": "Gbmin7",
+          "nom_fr": "Sol bémol mineur septième",
+          "notes": ["Gb", "A", "Db", "E"],
+          "aliases": ["Gbm7", "Gb-7", "Gbmin7", "F#m7", "F#-7", "F#min7"],
+          "categorie": "mineur",
+          "description": "Accord mineur avec septième mineure"
+        },
+        {
+          "nom": "Gb7",
+          "nom_fr": "Sol bémol septième",
+          "notes": ["Gb", "Bb", "Db", "E"],
+          "aliases": ["Gb7", "Gbdom7", "F#7", "F#dom7"],
+          "categorie": "dominant",
+          "description": "Accord majeur avec septième mineure (dominant)"
+        }
+      ]
+    },
+    "G": {
+      "nom_fr": "Sol",
+      "nom_en": "G",
+      "accords": [
+        {
+          "nom": "Gmaj7",
+          "nom_fr": "Sol majeur septième",
+          "notes": ["G", "B", "D", "F#"],
+          "aliases": ["Gmaj7", "GΔ7", "GM7"],
+          "categorie": "majeur",
+          "description": "Accord majeur avec septième majeure"
+        },
+        {
+          "nom": "Gmin7",
+          "nom_fr": "Sol mineur septième",
+          "notes": ["G", "Bb", "D", "F"],
+          "aliases": ["Gm7", "G-7", "Gmin7"],
+          "categorie": "mineur",
+          "description": "Accord mineur avec septième mineure"
+        },
+        {
+          "nom": "G7",
+          "nom_fr": "Sol septième",
+          "notes": ["G", "B", "D", "F"],
+          "aliases": ["G7", "Gdom7"],
+          "categorie": "dominant",
+          "description": "Accord majeur avec septième mineure (dominant)"
+        }
+      ]
+    },
+    "Ab": {
+      "nom_fr": "La bémol",
+      "nom_en": "Ab",
+      "accords": [
+        {
+          "nom": "Abmaj7",
+          "nom_fr": "La bémol majeur septième",
+          "notes": ["Ab", "C", "Eb", "G"],
+          "aliases": ["Abmaj7", "AbΔ7", "AbM7", "G#maj7", "G#Δ7", "G#M7"],
+          "categorie": "majeur",
+          "description": "Accord majeur avec septième majeure"
+        },
+        {
+          "nom": "Abmin7",
+          "nom_fr": "La bémol mineur septième",
+          "notes": ["Ab", "B", "Eb", "Gb"],
+          "aliases": ["Abm7", "Ab-7", "Abmin7", "G#m7", "G#-7", "G#min7"],
+          "categorie": "mineur",
+          "description": "Accord mineur avec septième mineure"
+        },
+        {
+          "nom": "Ab7",
+          "nom_fr": "La bémol septième",
+          "notes": ["Ab", "C", "Eb", "Gb"],
+          "aliases": ["Ab7", "Abdom7", "G#7", "G#dom7"],
+          "categorie": "dominant",
+          "description": "Accord majeur avec septième mineure (dominant)"
+        }
+      ]
+    },
+    "A": {
+      "nom_fr": "La",
+      "nom_en": "A",
+      "accords": [
+        {
+          "nom": "Amaj7",
+          "nom_fr": "La majeur septième",
+          "notes": ["A", "C#", "E", "G#"],
+          "aliases": ["Amaj7", "AΔ7", "AM7"],
+          "categorie": "majeur",
+          "description": "Accord majeur avec septième majeure"
+        },
+        {
+          "nom": "Amin7",
+          "nom_fr": "La mineur septième",
+          "notes": ["A", "C", "E", "G"],
+          "aliases": ["Am7", "A-7", "Amin7"],
+          "categorie": "mineur",
+          "description": "Accord mineur avec septième mineure"
+        },
+        {
+          "nom": "A7",
+          "nom_fr": "La septième",
+          "notes": ["A", "C#", "E", "G"],
+          "aliases": ["A7", "Adom7"],
+          "categorie": "dominant",
+          "description": "Accord majeur avec septième mineure (dominant)"
+        }
+      ]
+    },
+    "Bb": {
+      "nom_fr": "Si bémol",
+      "nom_en": "Bb",
+      "accords": [
+        {
+          "nom": "Bbmaj7",
+          "nom_fr": "Si bémol majeur septième",
+          "notes": ["Bb", "D", "F", "A"],
+          "aliases": ["Bbmaj7", "BbΔ7", "BbM7", "A#maj7", "A#Δ7", "A#M7"],
+          "categorie": "majeur",
+          "description": "Accord majeur avec septième majeure"
+        },
+        {
+          "nom": "Bbmin7",
+          "nom_fr": "Si bémol mineur septième",
+          "notes": ["Bb", "Db", "F", "Ab"],
+          "aliases": ["Bbm7", "Bb-7", "Bbmin7", "A#m7", "A#-7", "A#min7"],
+          "categorie": "mineur",
+          "description": "Accord mineur avec septième mineure"
+        },
+        {
+          "nom": "Bb7",
+          "nom_fr": "Si bémol septième",
+          "notes": ["Bb", "D", "F", "Ab"],
+          "aliases": ["Bb7", "Bbdom7", "A#7", "A#dom7"],
+          "categorie": "dominant",
+          "description": "Accord majeur avec septième mineure (dominant)"
+        }
+      ]
+    },
+    "B": {
+      "nom_fr": "Si",
+      "nom_en": "B",
+      "accords": [
+        {
+          "nom": "Bmaj7",
+          "nom_fr": "Si majeur septième",
+          "notes": ["B", "D#", "F#", "A#"],
+          "aliases": ["Bmaj7", "BΔ7", "BM7"],
+          "categorie": "majeur",
+          "description": "Accord majeur avec septième majeure"
+        },
+        {
+          "nom": "Bmin7",
+          "nom_fr": "Si mineur septième",
+          "notes": ["B", "D", "F#", "A"],
+          "aliases": ["Bm7", "B-7", "Bmin7"],
+          "categorie": "mineur",
+          "description": "Accord mineur avec septième mineure"
+        },
+        {
+          "nom": "B7",
+          "nom_fr": "Si septième",
+          "notes": ["B", "D#", "F#", "A"],
+          "aliases": ["B7", "Bdom7"],
+          "categorie": "dominant",
+          "description": "Accord majeur avec septième mineure (dominant)"
+        }
+      ]
+    }
+  }
+}
