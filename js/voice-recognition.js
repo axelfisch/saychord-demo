@@ -1,226 +1,267 @@
 /**
- * Gestionnaire de reconnaissance vocale pour SayChord
- * Utilise l'API Web Speech pour reconnaître les accords dictés vocalement
+ * Gestionnaire de reconnaissance vocale pour l'application SayChord
+ * Version adaptée pour GitHub Pages avec gestion des permissions et des erreurs
  */
+
 class VoiceRecognitionManager {
     constructor(chordDictionary) {
         this.chordDictionary = chordDictionary;
         this.recognition = null;
         this.isListening = false;
-        this.onResultCallback = null;
-        this.onStartCallback = null;
-        this.onEndCallback = null;
-        this.onErrorCallback = null;
-        this.lang = 'fr-FR'; // Langue par défaut
-        
+        this.callbacks = {
+            onResult: null,
+            onStart: null,
+            onStop: null,
+            onError: null
+        };
+        this.errorMessages = {
+            'not-allowed': "L'accès au microphone a été refusé. Veuillez autoriser l'accès au microphone dans les paramètres de votre navigateur.",
+            'no-speech': "Aucune parole n'a été détectée. Veuillez parler plus fort ou vérifier votre microphone.",
+            'audio-capture': "Aucun microphone n'a été détecté. Veuillez vérifier que votre microphone est correctement connecté.",
+            'network': "Une erreur réseau s'est produite. Veuillez vérifier votre connexion internet.",
+            'aborted': "La reconnaissance vocale a été interrompue.",
+            'service-not-allowed': "Le service de reconnaissance vocale n'est pas disponible dans ce navigateur.",
+            'bad-grammar': "Erreur de grammaire dans la reconnaissance vocale.",
+            'language-not-supported': "La langue demandée n'est pas prise en charge.",
+            'no-match': "Aucune correspondance n'a été trouvée pour ce que vous avez dit.",
+            'service-not-available': "Le service de reconnaissance vocale n'est pas disponible actuellement.",
+            'default': "Une erreur s'est produite lors de la reconnaissance vocale."
+        };
         this.initRecognition();
     }
 
-    /**
-     * Initialise le système de reconnaissance vocale
-     */
     initRecognition() {
-        // Vérifier si l'API Web Speech est supportée
-        if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-            console.error('La reconnaissance vocale n\'est pas supportée par ce navigateur.');
-            return;
-        }
+        try {
+            // Vérifier si la reconnaissance vocale est disponible dans le navigateur
+            if ('webkitSpeechRecognition' in window) {
+                this.recognition = new webkitSpeechRecognition();
+            } else if ('SpeechRecognition' in window) {
+                this.recognition = new SpeechRecognition();
+            } else {
+                this.showPermissionRequest('La reconnaissance vocale n\'est pas prise en charge par votre navigateur. Essayez avec Chrome, Edge ou Safari.');
+                return;
+            }
 
-        // Créer l'objet de reconnaissance vocale
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        this.recognition = new SpeechRecognition();
-        
-        // Configurer les options
-        this.recognition.continuous = false;
-        this.recognition.interimResults = false;
-        this.recognition.lang = this.lang;
-        
-        // Configurer les gestionnaires d'événements
-        this.recognition.onresult = (event) => this.handleResult(event);
-        this.recognition.onstart = () => this.handleStart();
-        this.recognition.onend = () => this.handleEnd();
-        this.recognition.onerror = (event) => this.handleError(event);
-        
-        console.log('Système de reconnaissance vocale initialisé');
+            // Configuration de la reconnaissance vocale
+            this.recognition.continuous = false;
+            this.recognition.interimResults = false;
+            this.recognition.lang = 'fr-FR'; // Par défaut en français
+
+            // Événements de la reconnaissance vocale
+            this.recognition.onstart = () => {
+                this.isListening = true;
+                if (this.callbacks.onStart) this.callbacks.onStart();
+                this.hideErrorMessage();
+            };
+
+            this.recognition.onend = () => {
+                this.isListening = false;
+                if (this.callbacks.onStop) this.callbacks.onStop();
+            };
+
+            this.recognition.onresult = (event) => {
+                const last = event.results.length - 1;
+                const text = event.results[last][0].transcript.trim();
+                console.log('Texte reconnu:', text);
+                
+                if (this.callbacks.onResult) {
+                    const chord = this.findChord(text);
+                    this.callbacks.onResult(text, chord);
+                }
+            };
+
+            this.recognition.onerror = (event) => {
+                console.error('Erreur de reconnaissance vocale:', event.error);
+                
+                // Afficher un message d'erreur approprié
+                const errorMessage = this.errorMessages[event.error] || this.errorMessages.default;
+                this.showErrorMessage(errorMessage);
+                
+                if (event.error === 'not-allowed') {
+                    this.showPermissionRequest('Veuillez autoriser l\'accès au microphone pour utiliser la dictée vocale.');
+                }
+                
+                if (this.callbacks.onError) this.callbacks.onError(event.error);
+            };
+
+            console.log('Reconnaissance vocale initialisée avec succès');
+        } catch (error) {
+            console.error('Erreur lors de l\'initialisation de la reconnaissance vocale:', error);
+            this.showErrorMessage('Une erreur s\'est produite lors de l\'initialisation de la reconnaissance vocale.');
+        }
     }
 
-    /**
-     * Démarre l'écoute vocale
-     */
-    startListening() {
+    start() {
         if (!this.recognition) {
-            console.error('La reconnaissance vocale n\'est pas initialisée');
+            this.showPermissionRequest('La reconnaissance vocale n\'est pas disponible. Veuillez utiliser un navigateur compatible comme Chrome, Edge ou Safari.');
             return;
         }
-        
-        if (this.isListening) {
-            this.stopListening();
-        }
-        
+
         try {
             this.recognition.start();
-            this.isListening = true;
-            console.log('Écoute vocale démarrée');
+            console.log('Reconnaissance vocale démarrée');
         } catch (error) {
-            console.error('Erreur lors du démarrage de l\'écoute vocale:', error);
-        }
-    }
-
-    /**
-     * Arrête l'écoute vocale
-     */
-    stopListening() {
-        if (!this.recognition || !this.isListening) {
-            return;
-        }
-        
-        try {
+            console.error('Erreur lors du démarrage de la reconnaissance vocale:', error);
+            this.showErrorMessage('Une erreur s\'est produite lors du démarrage de la reconnaissance vocale.');
+            
+            // Réinitialiser la reconnaissance en cas d'erreur
             this.recognition.stop();
-            this.isListening = false;
-            console.log('Écoute vocale arrêtée');
-        } catch (error) {
-            console.error('Erreur lors de l\'arrêt de l\'écoute vocale:', error);
+            setTimeout(() => {
+                this.initRecognition();
+            }, 500);
         }
     }
 
-    /**
-     * Change la langue de reconnaissance
-     * @param {string} lang - Code de langue (ex: 'fr-FR', 'en-US')
-     */
-    setLanguage(lang) {
-        this.lang = lang;
-        if (this.recognition) {
-            this.recognition.lang = lang;
-            console.log(`Langue de reconnaissance changée pour: ${lang}`);
-        }
-    }
-
-    /**
-     * Gère les résultats de la reconnaissance vocale
-     * @param {SpeechRecognitionEvent} event - Événement de résultat
-     */
-    handleResult(event) {
-        const result = event.results[0][0].transcript.trim();
-        console.log('Texte reconnu:', result);
-        
-        // Analyser le résultat pour identifier l'accord
-        const chord = this.parseChordFromText(result);
-        
-        if (this.onResultCallback && chord) {
-            this.onResultCallback(chord);
-        }
-    }
-
-    /**
-     * Analyse le texte reconnu pour identifier un accord
-     * @param {string} text - Texte reconnu
-     * @returns {Object|null} Objet accord identifié ou null si non trouvé
-     */
-    parseChordFromText(text) {
-        // Normaliser le texte
-        const normalizedText = text.toLowerCase()
-            .replace(/majeur/g, 'maj')
-            .replace(/mineur/g, 'min')
-            .replace(/septième/g, '7')
-            .replace(/septieme/g, '7')
-            .replace(/bémol/g, 'b')
-            .replace(/dièse/g, '#')
-            .replace(/diese/g, '#')
-            .replace(/augmenté/g, 'aug')
-            .replace(/augmente/g, 'aug')
-            .replace(/diminué/g, 'dim')
-            .replace(/diminue/g, 'dim');
-        
-        // Rechercher des motifs d'accords courants
-        const chordPatterns = [
-            // Motifs en français
-            /\b(do|ré|re|mi|fa|sol|la|si)\s*(bémol|bemol|dièse|diese|b|#)?\s*(maj|min|m|7|maj7|min7|m7|dim|aug|sus4|sus2|6|9|11|13)?\s*(bémol|bemol|dièse|diese|b|#)?\s*(5|7|9|11|13)?\b/gi,
-            // Motifs en notation anglo-saxonne
-            /\b([a-g])(b|#)?\s*(maj|min|m|7|maj7|min7|m7|dim|aug|sus4|sus2|6|9|11|13)?\s*(b|#)?\s*(5|7|9|11|13)?\b/gi
-        ];
-        
-        // Tester chaque motif
-        for (const pattern of chordPatterns) {
-            const matches = normalizedText.match(pattern);
-            if (matches && matches.length > 0) {
-                // Rechercher l'accord dans le dictionnaire
-                for (const match of matches) {
-                    const chord = this.chordDictionary.findChord(match);
-                    if (chord) {
-                        return chord;
-                    }
-                }
+    stop() {
+        if (this.recognition && this.isListening) {
+            try {
+                this.recognition.stop();
+                console.log('Reconnaissance vocale arrêtée');
+            } catch (error) {
+                console.error('Erreur lors de l\'arrêt de la reconnaissance vocale:', error);
             }
         }
+    }
+
+    setLanguage(lang) {
+        if (this.recognition) {
+            this.recognition.lang = lang;
+            console.log('Langue de reconnaissance définie sur:', lang);
+        }
+    }
+
+    findChord(text) {
+        // Normaliser le texte (supprimer les accents, mettre en minuscules)
+        const normalizedText = text.toLowerCase()
+            .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         
-        // Si aucun motif ne correspond, essayer de rechercher directement dans le dictionnaire
-        return this.chordDictionary.findChord(normalizedText);
+        console.log('Recherche d\'accord pour:', normalizedText);
+        
+        // Adapter le texte pour la recherche d'accords
+        let searchText = normalizedText;
+        
+        // Remplacer les mots courants par leurs équivalents pour la recherche d'accords
+        const replacements = {
+            'do majeur': 'cmaj',
+            'do mineur': 'cmin',
+            're majeur': 'dmaj',
+            're mineur': 'dmin',
+            'mi majeur': 'emaj',
+            'mi mineur': 'emin',
+            'fa majeur': 'fmaj',
+            'fa mineur': 'fmin',
+            'sol majeur': 'gmaj',
+            'sol mineur': 'gmin',
+            'la majeur': 'amaj',
+            'la mineur': 'amin',
+            'si majeur': 'bmaj',
+            'si mineur': 'bmin',
+            'majeur': 'maj',
+            'mineur': 'min',
+            'septieme': '7',
+            'septième': '7',
+            'bemol': 'b',
+            'bémol': 'b',
+            'diese': '#',
+            'dièse': '#'
+        };
+        
+        for (const [word, replacement] of Object.entries(replacements)) {
+            searchText = searchText.replace(new RegExp(word, 'g'), replacement);
+        }
+        
+        console.log('Texte adapté pour la recherche:', searchText);
+        
+        // Rechercher dans le dictionnaire d'accords
+        return this.chordDictionary.findChordByText(searchText);
     }
 
-    /**
-     * Gère le début de la reconnaissance vocale
-     */
-    handleStart() {
-        console.log('Reconnaissance vocale démarrée');
-        if (this.onStartCallback) {
-            this.onStartCallback();
+    setCallbacks(callbacks) {
+        this.callbacks = { ...this.callbacks, ...callbacks };
+    }
+
+    showErrorMessage(message) {
+        const errorElement = document.getElementById('error-message');
+        if (errorElement) {
+            errorElement.textContent = message;
+            errorElement.classList.add('show');
+        } else {
+            // Créer l'élément s'il n'existe pas
+            const newErrorElement = document.createElement('div');
+            newErrorElement.id = 'error-message';
+            newErrorElement.className = 'error-message show';
+            newErrorElement.textContent = message;
+            document.querySelector('.control-panel').prepend(newErrorElement);
         }
     }
 
-    /**
-     * Gère la fin de la reconnaissance vocale
-     */
-    handleEnd() {
-        console.log('Reconnaissance vocale terminée');
-        this.isListening = false;
-        if (this.onEndCallback) {
-            this.onEndCallback();
+    hideErrorMessage() {
+        const errorElement = document.getElementById('error-message');
+        if (errorElement) {
+            errorElement.classList.remove('show');
         }
     }
 
-    /**
-     * Gère les erreurs de reconnaissance vocale
-     * @param {SpeechRecognitionError} event - Événement d'erreur
-     */
-    handleError(event) {
-        console.error('Erreur de reconnaissance vocale:', event.error);
-        this.isListening = false;
-        if (this.onErrorCallback) {
-            this.onErrorCallback(event.error);
+    showPermissionRequest(message) {
+        let permissionElement = document.getElementById('permission-request');
+        
+        if (!permissionElement) {
+            // Créer l'élément s'il n'existe pas
+            permissionElement = document.createElement('div');
+            permissionElement.id = 'permission-request';
+            permissionElement.className = 'permission-request';
+            
+            const messageElement = document.createElement('p');
+            messageElement.textContent = message;
+            
+            const button = document.createElement('button');
+            button.textContent = 'Autoriser le microphone';
+            button.onclick = () => {
+                // Demander l'accès au microphone
+                navigator.mediaDevices.getUserMedia({ audio: true })
+                    .then(() => {
+                        // Accès autorisé
+                        permissionElement.classList.remove('show');
+                        this.initRecognition();
+                        this.start();
+                    })
+                    .catch((error) => {
+                        // Accès refusé
+                        console.error('Erreur d\'accès au microphone:', error);
+                        this.showErrorMessage('L\'accès au microphone a été refusé. Veuillez autoriser l\'accès dans les paramètres de votre navigateur.');
+                    });
+            };
+            
+            permissionElement.appendChild(messageElement);
+            permissionElement.appendChild(button);
+            
+            document.querySelector('.control-panel').prepend(permissionElement);
+        } else {
+            // Mettre à jour le message
+            permissionElement.querySelector('p').textContent = message;
         }
-    }
-
-    /**
-     * Définit le callback pour les résultats de reconnaissance
-     * @param {Function} callback - Fonction à appeler avec l'accord reconnu
-     */
-    onResult(callback) {
-        this.onResultCallback = callback;
-    }
-
-    /**
-     * Définit le callback pour le début de la reconnaissance
-     * @param {Function} callback - Fonction à appeler au début de la reconnaissance
-     */
-    onStart(callback) {
-        this.onStartCallback = callback;
-    }
-
-    /**
-     * Définit le callback pour la fin de la reconnaissance
-     * @param {Function} callback - Fonction à appeler à la fin de la reconnaissance
-     */
-    onEnd(callback) {
-        this.onEndCallback = callback;
-    }
-
-    /**
-     * Définit le callback pour les erreurs de reconnaissance
-     * @param {Function} callback - Fonction à appeler en cas d'erreur
-     */
-    onError(callback) {
-        this.onErrorCallback = callback;
+        
+        permissionElement.classList.add('show');
     }
 }
 
-export default VoiceRecognitionManager;
+// Vérifier si le module est chargé dans un contexte GitHub Pages
+if (window.location.hostname.includes('github.io')) {
+    console.log('Application exécutée sur GitHub Pages - Adaptations spécifiques activées');
+    
+    // Vérifier les permissions du microphone au chargement
+    document.addEventListener('DOMContentLoaded', () => {
+        // Vérifier si l'API mediaDevices est disponible
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            console.log('API mediaDevices disponible');
+        } else {
+            console.warn('API mediaDevices non disponible dans ce navigateur');
+            
+            // Créer un élément d'avertissement
+            const warningElement = document.createElement('div');
+            warningElement.className = 'error-message show';
+            warningElement.textContent = 'La reconnaissance vocale nécessite un navigateur moderne comme Chrome, Edge ou Safari.';
+            document.querySelector('.control-panel').prepend(warningElement);
+        }
+    });
+}
