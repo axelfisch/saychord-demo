@@ -1,332 +1,232 @@
-/**
- * Moteur de synthèse sonore pour l'application SayChord
- * Version adaptée pour GitHub Pages avec gestion des erreurs et compatibilité navigateur
- */
+// synthesizer.js - Module de synthèse sonore pour SayChord
+// Version corrigée pour GitHub Pages
 
 class Synthesizer {
     constructor() {
         this.audioContext = null;
         this.masterGain = null;
-        this.oscillators = {};
         this.initialized = false;
-        this.errorMessages = {
-            'not-allowed': "L'accès audio a été refusé. Veuillez autoriser l'accès audio dans les paramètres de votre navigateur.",
-            'not-supported': "L'API Web Audio n'est pas prise en charge par votre navigateur.",
-            'context-not-allowed': "Le contexte audio n'a pas pu être démarré. Veuillez interagir avec la page (cliquer) pour autoriser la lecture audio.",
-            'default': "Une erreur s'est produite lors de l'initialisation du synthétiseur audio."
-        };
-        
-        // Tenter d'initialiser le contexte audio au chargement
-        this.initAudioContext();
+        this.initPromise = null;
+        this.fmSynths = {};
+        this.reverb = null;
+        this.isPlaying = false;
     }
 
-    initAudioContext() {
-        try {
-            // Vérifier si l'API Web Audio est disponible
-            if (window.AudioContext || window.webkitAudioContext) {
-                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-                this.audioContext = new AudioContextClass();
-                
-                // Créer le nœud de gain principal
-                this.masterGain = this.audioContext.createGain();
-                this.masterGain.gain.value = 0.7; // Volume par défaut
-                this.masterGain.connect(this.audioContext.destination);
-                
-                console.log('Contexte audio initialisé avec succès');
-                this.initialized = true;
-                
-                // Vérifier l'état du contexte audio
-                if (this.audioContext.state === 'suspended') {
-                    this.showAudioActivationMessage();
+    async initialize() {
+        if (this.initPromise) {
+            return this.initPromise;
+        }
+
+        this.initPromise = new Promise(async (resolve, reject) => {
+            try {
+                // Créer un nouveau contexte audio avec gestion des erreurs
+                try {
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                } catch (error) {
+                    console.error("Erreur lors de la création du contexte audio:", error);
+                    reject("Votre navigateur ne prend pas en charge l'API Web Audio. Veuillez utiliser un navigateur moderne comme Chrome, Edge ou Firefox.");
+                    return;
                 }
+
+                // Créer le gain master
+                this.masterGain = this.audioContext.createGain();
+                this.masterGain.gain.value = 0.7;
+                this.masterGain.connect(this.audioContext.destination);
+
+                // Créer l'effet de réverbération
+                this.reverb = await this.createReverb();
                 
-                // Écouter les changements d'état du contexte audio
-                this.audioContext.onstatechange = () => {
-                    console.log('État du contexte audio changé :', this.audioContext.state);
-                    if (this.audioContext.state === 'running') {
-                        this.hideErrorMessage();
-                    }
-                };
-            } else {
-                console.error("L'API Web Audio n'est pas prise en charge par ce navigateur");
-                this.showErrorMessage(this.errorMessages['not-supported']);
+                // Marquer comme initialisé
+                this.initialized = true;
+                console.log("Synthétiseur initialisé avec succès");
+                resolve();
+            } catch (error) {
+                console.error("Erreur lors de l'initialisation du synthétiseur:", error);
+                reject("Impossible d'initialiser le synthétiseur audio");
             }
-        } catch (error) {
-            console.error('Erreur lors de l\'initialisation du contexte audio :', error);
-            this.showErrorMessage(this.errorMessages.default);
-        }
+        });
+
+        return this.initPromise;
     }
 
-    // Méthode pour démarrer le contexte audio suite à une interaction utilisateur
-    resumeAudioContext() {
-        if (this.audioContext && this.audioContext.state === 'suspended') {
-            this.audioContext.resume()
-                .then(() => {
-                    console.log('Contexte audio démarré avec succès');
-                    this.hideErrorMessage();
-                })
-                .catch(error => {
-                    console.error('Erreur lors du démarrage du contexte audio :', error);
-                    this.showErrorMessage(this.errorMessages['context-not-allowed']);
-                });
+    async createReverb() {
+        // Créer un nœud de convolution pour la réverbération
+        const convolver = this.audioContext.createConvolver();
+        
+        // Créer un tampon d'impulsion de réverbération simple
+        const bufferSize = this.audioContext.sampleRate * 3; // 3 secondes
+        const buffer = this.audioContext.createBuffer(2, bufferSize, this.audioContext.sampleRate);
+        
+        // Remplir les canaux avec un bruit décroissant exponentiel
+        for (let channel = 0; channel < 2; channel++) {
+            const data = buffer.getChannelData(channel);
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.3));
+            }
         }
+        
+        convolver.buffer = buffer;
+        
+        // Créer un nœud de gain pour contrôler le niveau de réverbération
+        const reverbGain = this.audioContext.createGain();
+        reverbGain.gain.value = 0.2;
+        
+        // Connecter le convolver au gain de réverbération
+        convolver.connect(reverbGain);
+        reverbGain.connect(this.masterGain);
+        
+        return convolver;
     }
 
-    // Méthode pour jouer un accord
-    playChord(chord) {
+    async playChord(chord) {
         if (!this.initialized) {
-            this.initAudioContext();
-            if (!this.initialized) {
-                console.error('Impossible de jouer l\'accord : synthétiseur non initialisé');
+            try {
+                await this.initialize();
+            } catch (error) {
+                console.error("Impossible de jouer l'accord:", error);
                 return;
             }
         }
-        
-        // Démarrer le contexte audio si nécessaire
+
+        // Réactiver le contexte audio si nécessaire (pour les navigateurs qui le suspendent)
         if (this.audioContext.state === 'suspended') {
-            this.resumeAudioContext();
+            try {
+                await this.audioContext.resume();
+            } catch (error) {
+                console.error("Impossible de reprendre le contexte audio:", error);
+                return;
+            }
         }
-        
-        // Arrêter les oscillateurs précédents
-        this.stopAllOscillators();
-        
-        // Vérifier que l'accord est valide
-        if (!chord || !chord.notes || !Array.isArray(chord.notes) || chord.notes.length === 0) {
-            console.error('Accord invalide :', chord);
-            return;
-        }
-        
-        try {
-            // Jouer chaque note de l'accord
+
+        // Arrêter les notes précédentes
+        this.stopAllNotes();
+
+        // Jouer chaque note de l'accord
+        if (chord && chord.notes && chord.notes.length > 0) {
             chord.notes.forEach((note, index) => {
                 const frequency = this.noteToFrequency(note);
-                this.playNote(frequency, index);
+                const delay = index * 0.02; // Léger arpège pour un son plus naturel
+                this.playNote(frequency, delay);
             });
             
-            console.log('Accord joué :', chord.nom);
-        } catch (error) {
-            console.error('Erreur lors de la lecture de l\'accord :', error);
+            this.isPlaying = true;
         }
     }
 
-    // Méthode pour jouer une note
-    playNote(frequency, id) {
-        if (!this.audioContext) return;
+    playNote(frequency, delay = 0) {
+        // Créer un synthétiseur FM pour cette note
+        const synth = this.createFMSynth(frequency);
         
-        try {
-            // Créer un oscillateur FM pour un son de piano électrique
-            const carrier = this.audioContext.createOscillator();
-            const modulator = this.audioContext.createOscillator();
-            const modulatorGain = this.audioContext.createGain();
-            const noteGain = this.audioContext.createGain();
-            
-            // Configurer le modulateur
-            modulator.type = 'sine';
-            modulator.frequency.value = frequency * 2; // Ratio de modulation
-            modulatorGain.gain.value = 100; // Indice de modulation
-            
-            // Configurer la porteuse
-            carrier.type = 'sine';
-            carrier.frequency.value = frequency;
-            
-            // Configurer le gain de la note
-            noteGain.gain.value = 0;
-            
-            // Connecter les nœuds
-            modulator.connect(modulatorGain);
-            modulatorGain.connect(carrier.frequency);
-            carrier.connect(noteGain);
-            noteGain.connect(this.masterGain);
-            
-            // Enveloppe ADSR pour un son de piano électrique
-            const now = this.audioContext.currentTime;
-            
-            // Attack
-            noteGain.gain.setValueAtTime(0, now);
-            noteGain.gain.linearRampToValueAtTime(0.7, now + 0.02);
-            
-            // Decay
-            noteGain.gain.linearRampToValueAtTime(0.5, now + 0.1);
-            
-            // Sustain (maintenu pendant la durée de la note)
-            noteGain.gain.linearRampToValueAtTime(0.3, now + 0.3);
-            
-            // Release (après 2 secondes)
-            noteGain.gain.linearRampToValueAtTime(0, now + 2);
-            
-            // Démarrer les oscillateurs
-            modulator.start();
-            carrier.start();
-            
-            // Arrêter les oscillateurs après 2 secondes
-            modulator.stop(now + 2);
-            carrier.stop(now + 2);
-            
-            // Stocker les oscillateurs pour pouvoir les arrêter plus tard
-            this.oscillators[id] = {
-                carrier,
-                modulator,
-                noteGain,
-                modulatorGain
-            };
-            
-            // Nettoyer après l'arrêt
-            carrier.onended = () => {
-                delete this.oscillators[id];
-            };
-        } catch (error) {
-            console.error('Erreur lors de la lecture de la note :', error);
-        }
+        // Stocker le synthétiseur pour pouvoir l'arrêter plus tard
+        this.fmSynths[frequency] = synth;
+        
+        // Planifier le début de la note
+        const startTime = this.audioContext.currentTime + delay;
+        
+        // Modulateur
+        synth.modulator.frequency.setValueAtTime(frequency * 2, startTime);
+        synth.modulator.gain.setValueAtTime(0, startTime);
+        synth.modulator.gain.linearRampToValueAtTime(frequency * 2, startTime + 0.01);
+        
+        // Porteuse
+        synth.carrier.frequency.setValueAtTime(frequency, startTime);
+        
+        // Enveloppe d'amplitude
+        synth.envelope.gain.setValueAtTime(0, startTime);
+        synth.envelope.gain.linearRampToValueAtTime(0.3, startTime + 0.02);
+        synth.envelope.gain.exponentialRampToValueAtTime(0.2, startTime + 0.3);
+        synth.envelope.gain.exponentialRampToValueAtTime(0.1, startTime + 2);
+        synth.envelope.gain.linearRampToValueAtTime(0, startTime + 4);
     }
 
-    // Méthode pour arrêter tous les oscillateurs
-    stopAllOscillators() {
-        const now = this.audioContext ? this.audioContext.currentTime : 0;
+    stopAllNotes() {
+        if (!this.initialized) return;
         
-        Object.values(this.oscillators).forEach(osc => {
-            try {
-                // Appliquer un fade-out rapide pour éviter les clics
-                osc.noteGain.gain.cancelScheduledValues(now);
-                osc.noteGain.gain.setValueAtTime(osc.noteGain.gain.value, now);
-                osc.noteGain.gain.linearRampToValueAtTime(0, now + 0.01);
-                
-                // Arrêter les oscillateurs après le fade-out
-                osc.carrier.stop(now + 0.02);
-                osc.modulator.stop(now + 0.02);
-            } catch (error) {
-                console.error('Erreur lors de l\'arrêt des oscillateurs :', error);
-            }
+        // Arrêter toutes les notes en cours
+        const currentTime = this.audioContext.currentTime;
+        
+        Object.values(this.fmSynths).forEach(synth => {
+            // Fade out rapide
+            synth.envelope.gain.cancelScheduledValues(currentTime);
+            synth.envelope.gain.setValueAtTime(synth.envelope.gain.value, currentTime);
+            synth.envelope.gain.linearRampToValueAtTime(0, currentTime + 0.05);
+            
+            // Déconnecter après le fade out
+            setTimeout(() => {
+                synth.carrier.disconnect();
+                synth.modulator.disconnect();
+                synth.envelope.disconnect();
+            }, 100);
         });
         
-        // Réinitialiser la liste des oscillateurs
-        this.oscillators = {};
+        // Réinitialiser la liste des synthés
+        this.fmSynths = {};
+        this.isPlaying = false;
     }
 
-    // Méthode pour convertir une note en fréquence
+    createFMSynth(frequency) {
+        // Créer les oscillateurs et les nœuds de gain
+        const carrier = this.audioContext.createOscillator();
+        const modulator = this.audioContext.createOscillator();
+        const modulatorGain = this.audioContext.createGain();
+        const envelope = this.audioContext.createGain();
+        
+        // Configurer les oscillateurs
+        carrier.type = 'sine';
+        modulator.type = 'sine';
+        
+        // Connecter le modulateur au gain du modulateur
+        modulator.connect(modulatorGain);
+        modulatorGain.connect(carrier.frequency);
+        
+        // Connecter la porteuse à l'enveloppe
+        carrier.connect(envelope);
+        
+        // Connecter l'enveloppe à la sortie principale et à la réverbération
+        envelope.connect(this.masterGain);
+        envelope.connect(this.reverb);
+        
+        // Démarrer les oscillateurs
+        carrier.start();
+        modulator.start();
+        
+        return {
+            carrier: carrier,
+            modulator: modulator,
+            modulatorGain: modulatorGain,
+            envelope: envelope
+        };
+    }
+
     noteToFrequency(note) {
-        const notes = {
-            'C': 261.63, // Do
-            'C#': 277.18, 'Db': 277.18,
-            'D': 293.66, // Ré
-            'D#': 311.13, 'Eb': 311.13,
-            'E': 329.63, // Mi
-            'F': 349.23, // Fa
-            'F#': 369.99, 'Gb': 369.99,
-            'G': 392.00, // Sol
-            'G#': 415.30, 'Ab': 415.30,
-            'A': 440.00, // La
-            'A#': 466.16, 'Bb': 466.16,
-            'B': 493.88  // Si
+        // Table de correspondance des notes et fréquences
+        const noteTable = {
+            'C': 261.63, 'C#': 277.18, 'Db': 277.18, 'D': 293.66, 'D#': 311.13, 'Eb': 311.13,
+            'E': 329.63, 'F': 349.23, 'F#': 369.99, 'Gb': 369.99, 'G': 392.00, 'G#': 415.30,
+            'Ab': 415.30, 'A': 440.00, 'A#': 466.16, 'Bb': 466.16, 'B': 493.88
         };
         
         // Extraire la note de base et l'octave
-        const notePattern = /^([A-G][b#]?)(\d*)$/;
-        const match = note.match(notePattern);
+        const regex = /([A-G][b#]?)(\d*)/;
+        const match = note.match(regex);
         
-        if (!match) {
-            console.error('Format de note invalide :', note);
-            return 440; // La 440Hz par défaut
-        }
+        if (!match) return 440; // A4 par défaut
         
-        const [, noteName, octaveStr] = match;
-        const octave = octaveStr ? parseInt(octaveStr) : 4; // Octave 4 par défaut
+        const noteName = match[1];
+        const octave = match[2] ? parseInt(match[2]) : 4; // Octave 4 par défaut
         
         // Calculer la fréquence en fonction de l'octave
-        const baseFreq = notes[noteName] || 440;
-        const octaveDiff = octave - 4; // Par rapport à l'octave 4
+        const baseFreq = noteTable[noteName] || 440;
+        const octaveDiff = octave - 4; // Relatif à l'octave 4
         
         return baseFreq * Math.pow(2, octaveDiff);
     }
 
-    // Méthode pour définir le volume principal
     setVolume(volume) {
-        if (this.masterGain) {
-            this.masterGain.gain.value = Math.max(0, Math.min(1, volume));
-        }
-    }
-
-    // Méthode pour afficher un message d'erreur
-    showErrorMessage(message) {
-        let errorElement = document.getElementById('audio-error-message');
+        if (!this.initialized) return;
         
-        if (!errorElement) {
-            // Créer l'élément s'il n'existe pas
-            errorElement = document.createElement('div');
-            errorElement.id = 'audio-error-message';
-            errorElement.className = 'error-message show';
-            
-            // Ajouter au DOM
-            const controlPanel = document.querySelector('.control-panel');
-            if (controlPanel) {
-                controlPanel.prepend(errorElement);
-            } else {
-                document.body.prepend(errorElement);
-            }
-        }
-        
-        errorElement.textContent = message;
-        errorElement.classList.add('show');
+        // Volume entre 0 et 1
+        const safeVolume = Math.max(0, Math.min(1, volume));
+        this.masterGain.gain.value = safeVolume;
     }
-
-    // Méthode pour masquer le message d'erreur
-    hideErrorMessage() {
-        const errorElement = document.getElementById('audio-error-message');
-        if (errorElement) {
-            errorElement.classList.remove('show');
-        }
-    }
-
-    // Méthode pour afficher un message d'activation audio
-    showAudioActivationMessage() {
-        let activationElement = document.getElementById('audio-activation-message');
-        
-        if (!activationElement) {
-            // Créer l'élément s'il n'existe pas
-            activationElement = document.createElement('div');
-            activationElement.id = 'audio-activation-message';
-            activationElement.className = 'permission-request show';
-            
-            const messageElement = document.createElement('p');
-            messageElement.textContent = 'Cliquez sur le bouton ci-dessous pour activer l\'audio.';
-            
-            const button = document.createElement('button');
-            button.textContent = 'Activer l\'audio';
-            button.onclick = () => {
-                this.resumeAudioContext();
-                activationElement.classList.remove('show');
-            };
-            
-            activationElement.appendChild(messageElement);
-            activationElement.appendChild(button);
-            
-            // Ajouter au DOM
-            const controlPanel = document.querySelector('.control-panel');
-            if (controlPanel) {
-                controlPanel.prepend(activationElement);
-            } else {
-                document.body.prepend(activationElement);
-            }
-        } else {
-            activationElement.classList.add('show');
-        }
-    }
-}
-
-// Vérifier si le module est chargé dans un contexte GitHub Pages
-if (window.location.hostname.includes('github.io')) {
-    console.log('Application exécutée sur GitHub Pages - Adaptations audio spécifiques activées');
-    
-    // Ajouter un gestionnaire d'événements global pour démarrer le contexte audio
-    document.addEventListener('click', function audioActivationHandler() {
-        // Créer une instance temporaire du synthétiseur si nécessaire
-        if (window.synthesizer && window.synthesizer.audioContext) {
-            window.synthesizer.resumeAudioContext();
-        } else {
-            const tempSynth = new Synthesizer();
-            tempSynth.resumeAudioContext();
-        }
-        
-        // Supprimer ce gestionnaire après la première interaction
-        document.removeEventListener('click', audioActivationHandler);
-    }, { once: false });
 }
