@@ -230,3 +230,5 @@ class Synthesizer {
         this.masterGain.gain.value = safeVolume;
     }
 }
+
+export default Synthesizer;

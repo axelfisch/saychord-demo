@@ -1,5 +1,9 @@
 // ui-controller.js - Contrôleur d'interface utilisateur pour SayChord
 // Version corrigée pour GitHub Pages
+import ChordDictionary from './chord-dictionary.js';
+import Synthesizer from './synthesizer.js';
+import VoiceRecognition from './voice-recognition.js';
+import SequenceManager from './sequence-manager.js';
 
 class UIController {
     constructor() {
@@ -249,3 +253,5 @@ class UIController {
         }
     }
 }
+
+export default UIController;

@@ -54,3 +54,5 @@ document.addEventListener('DOMContentLoaded', () => {
     // L'améliorateur sera initialisé par main.js
     console.log('Améliorateur audio prêt à être initialisé');
 });
+
+export default AudioEnhancer;

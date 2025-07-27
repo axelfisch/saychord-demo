@@ -436,3 +436,5 @@ class SequenceManager {
 if (window.location.hostname.includes('github.io')) {
     console.log('Application exécutée sur GitHub Pages - Adaptations de séquence spécifiques activées');
 }
+
+export default SequenceManager;
