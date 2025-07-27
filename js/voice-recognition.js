@@ -1,5 +1,6 @@
 // voice-recognition.js - Module de reconnaissance vocale pour SayChord
 // Version corrigée pour GitHub Pages
+import VoiceRecognitionAdapter from './voice-recognition-adapter.js';
 
 class VoiceRecognition {
     constructor(chordDictionary) {
@@ -175,3 +176,5 @@ class VoiceRecognition {
         }
     }
 }
+
+export default VoiceRecognition;

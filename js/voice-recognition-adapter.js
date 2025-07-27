@@ -135,3 +135,5 @@ class VoiceRecognitionAdapter {
         return text;
     }
 }
+
+export default VoiceRecognitionAdapter;
