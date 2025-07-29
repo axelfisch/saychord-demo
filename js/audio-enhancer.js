@@ -49,7 +49,7 @@ class AudioEnhancer {
     }
 }
 
-// Initialiser l'améliorateur audio lorsque la page est chargée
+// Préparer l'initialisation de l'améliorateur audio lorsque la page est chargée
 document.addEventListener('DOMContentLoaded', () => {
     // L'améliorateur sera initialisé par main.js
     console.log('Améliorateur audio prêt à être initialisé');
