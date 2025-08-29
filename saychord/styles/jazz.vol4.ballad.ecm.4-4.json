@@ -1,0 +1,17 @@
+{
+  "id": "jazz.vol4.ballad.ecm.4-4",
+  "name": "ECM Ballad",
+  "time_signature": "4/4",
+  "default_bpm": 72,
+  "available_chords": {
+    "C": ["maj","maj7","add9","maj7#11","6/9"],
+    "C#": ["maj","maj7","add9"],
+    "D": ["m7","m9","m11","sus4","add9"],
+    "G": ["7","7#9","7b9","13","13#11","sus4"],
+    "A": ["m7b5","dim","7","7b9"]
+  },
+  "drum_grooves": {
+    "normal": ["DRUM_1","DRUM_2","DRUM_3"],
+    "fills": ["FILL_1","FILL_2","FILL_3","FILL_4"]
+  }
+}
