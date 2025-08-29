@@ -9,7 +9,6 @@ import VoiceRecognitionManager from './voice-recognition.js';
 import SynthesizerEngine from './synthesizer.js';
 import SequenceManager from './sequence-manager.js';
 import UIController from './ui-controller.js';
-import VoiceRecognitionAdapter from './voice-recognition-adapter.js';
 import AudioEnhancer from './audio-enhancer.js';
 
 // Fonction d'initialisation principale
@@ -36,10 +35,6 @@ async function initApp() {
         const voiceRecognition = new VoiceRecognitionManager(chordDictionary);
         console.log('Gestionnaire de reconnaissance vocale initialisé');
         
-        // Initialiser l'adaptateur de reconnaissance vocale
-        const voiceAdapter = new VoiceRecognitionAdapter(voiceRecognition, chordDictionary);
-        console.log('Adaptateur de reconnaissance vocale initialisé');
-        
         // Initialiser le gestionnaire de séquences
         const sequenceManager = new SequenceManager(synthesizer);
         console.log('Gestionnaire de séquences initialisé');
@@ -60,7 +55,6 @@ async function initApp() {
         window.saychordApp = {
             chordDictionary,
             voiceRecognition,
-            voiceAdapter,
             synthesizer,
             audioEnhancer,
             sequenceManager,
