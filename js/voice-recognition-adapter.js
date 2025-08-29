@@ -2,7 +2,7 @@
 // Version pour GitHub Pages
 
 class VoiceRecognitionAdapter {
-    constructor() {
+    constructor(chordDictionary) {
         // Dictionnaire de corrections courantes
         this.corrections = {
             // Corrections françaises
@@ -42,6 +42,11 @@ class VoiceRecognitionAdapter {
             'd minor': 'ré mineur',
             'd major': 'ré majeur'
         };
+
+        // Ajouter dynamiquement les alias depuis le dictionnaire d'accords
+        if (chordDictionary && chordDictionary.isLoaded) {
+            this.addDictionaryCorrections(chordDictionary.dictionary);
+        }
         
         // Expressions régulières pour la détection d'accords
         this.chordRegexPatterns = [
@@ -53,6 +58,28 @@ class VoiceRecognitionAdapter {
             /\b([a-g])(?:(#|b))?\s+(minor|major|min|maj)(?:\s+(\d+))?\b/i,
             /\b([a-g])(?:(#|b))?\s+(m|M)(?:(\d+))?\b/i
         ];
+    }
+
+    addDictionaryCorrections(dictionary) {
+        for (const tonalite of Object.values(dictionary.tonalites)) {
+            for (const accord of tonalite.accords) {
+                const canonical = (accord.nom || '').toLowerCase();
+
+                if (accord.nom_fr) {
+                    this.corrections[accord.nom_fr.toLowerCase()] = canonical;
+                }
+
+                if (accord.nom) {
+                    this.corrections[canonical] = canonical;
+                }
+
+                if (Array.isArray(accord.aliases)) {
+                    accord.aliases.forEach(alias => {
+                        this.corrections[alias.toLowerCase()] = canonical;
+                    });
+                }
+            }
+        }
     }
 
     processText(text) {

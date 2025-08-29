@@ -9,7 +9,7 @@ class VoiceRecognition {
         this.isListening = false;
         this.onResultCallback = null;
         this.onErrorCallback = null;
-        this.adapter = new VoiceRecognitionAdapter(); // Utilise l'adaptateur pour améliorer la reconnaissance
+        this.adapter = new VoiceRecognitionAdapter(chordDictionary); // Utilise l'adaptateur pour améliorer la reconnaissance
         this.setupRecognition();
     }
 
