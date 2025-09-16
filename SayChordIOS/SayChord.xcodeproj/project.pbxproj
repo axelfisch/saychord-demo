@@ -1,0 +1,399 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1D4A5B2A2B1234560012ABC1 /* SayChordApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D4A5B292B1234560012ABC1 /* SayChordApp.swift */; };
+		1D4A5B2C2B1234560012ABC1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D4A5B2B2B1234560012ABC1 /* ContentView.swift */; };
+		1D4A5B2E2B1234580012ABC1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1D4A5B2D2B1234580012ABC1 /* Assets.xcassets */; };
+		1D4A5B312B1234580012ABC1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1D4A5B302B1234580012ABC1 /* Preview Assets.xcassets */; };
+		1D4A5B382B1234790012ABC1 /* SpeechRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D4A5B372B1234790012ABC1 /* SpeechRecognizer.swift */; };
+		1D4A5B3A2B1234890012ABC1 /* ChordParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D4A5B392B1234890012ABC1 /* ChordParser.swift */; };
+		1D4A5B3C2B1234990012ABC1 /* AudioSynthesizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D4A5B3B2B1234990012ABC1 /* AudioSynthesizer.swift */; };
+		1D4A5B3E2B1234A90012ABC1 /* ChordSequencer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D4A5B3D2B1234A90012ABC1 /* ChordSequencer.swift */; };
+		1D4A5B402B1234B90012ABC1 /* MIDIExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D4A5B3F2B1234B90012ABC1 /* MIDIExporter.swift */; };
+		1D4A5B422B1234C90012ABC1 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D4A5B412B1234C90012ABC1 /* AudioRecorder.swift */; };
+		1D4A5B442B1234D90012ABC1 /* ChordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D4A5B432B1234D90012ABC1 /* ChordViewModel.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1D4A5B262B1234560012ABC1 /* SayChord.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SayChord.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1D4A5B292B1234560012ABC1 /* SayChordApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SayChordApp.swift; sourceTree = "<group>"; };
+		1D4A5B2B2B1234560012ABC1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		1D4A5B2D2B1234580012ABC1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1D4A5B302B1234580012ABC1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		1D4A5B372B1234790012ABC1 /* SpeechRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechRecognizer.swift; sourceTree = "<group>"; };
+		1D4A5B392B1234890012ABC1 /* ChordParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChordParser.swift; sourceTree = "<group>"; };
+		1D4A5B3B2B1234990012ABC1 /* AudioSynthesizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSynthesizer.swift; sourceTree = "<group>"; };
+		1D4A5B3D2B1234A90012ABC1 /* ChordSequencer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChordSequencer.swift; sourceTree = "<group>"; };
+		1D4A5B3F2B1234B90012ABC1 /* MIDIExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MIDIExporter.swift; sourceTree = "<group>"; };
+		1D4A5B412B1234C90012ABC1 /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
+		1D4A5B432B1234D90012ABC1 /* ChordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChordViewModel.swift; sourceTree = "<group>"; };
+		1D4A5B452B1234E90012ABC1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1D4A5B232B1234560012ABC1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1D4A5B1D2B1234560012ABC1 = {
+			isa = PBXGroup;
+			children = (
+				1D4A5B282B1234560012ABC1 /* SayChord */,
+				1D4A5B272B1234560012ABC1 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1D4A5B272B1234560012ABC1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1D4A5B262B1234560012ABC1 /* SayChord.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1D4A5B282B1234560012ABC1 /* SayChord */ = {
+			isa = PBXGroup;
+			children = (
+				1D4A5B292B1234560012ABC1 /* SayChordApp.swift */,
+				1D4A5B2B2B1234560012ABC1 /* ContentView.swift */,
+				1D4A5B432B1234D90012ABC1 /* ChordViewModel.swift */,
+				1D4A5B462B1234F90012ABC1 /* Models */,
+				1D4A5B472B1235090012ABC1 /* Services */,
+				1D4A5B2D2B1234580012ABC1 /* Assets.xcassets */,
+				1D4A5B452B1234E90012ABC1 /* Info.plist */,
+				1D4A5B2F2B1234580012ABC1 /* Preview Content */,
+			);
+			path = SayChord;
+			sourceTree = "<group>";
+		};
+		1D4A5B2F2B1234580012ABC1 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				1D4A5B302B1234580012ABC1 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		1D4A5B462B1234F90012ABC1 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				1D4A5B392B1234890012ABC1 /* ChordParser.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		1D4A5B472B1235090012ABC1 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				1D4A5B372B1234790012ABC1 /* SpeechRecognizer.swift */,
+				1D4A5B3B2B1234990012ABC1 /* AudioSynthesizer.swift */,
+				1D4A5B3D2B1234A90012ABC1 /* ChordSequencer.swift */,
+				1D4A5B3F2B1234B90012ABC1 /* MIDIExporter.swift */,
+				1D4A5B412B1234C90012ABC1 /* AudioRecorder.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1D4A5B252B1234560012ABC1 /* SayChord */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1D4A5B342B1234580012ABC1 /* Build configuration list for PBXNativeTarget "SayChord" */;
+			buildPhases = (
+				1D4A5B222B1234560012ABC1 /* Sources */,
+				1D4A5B232B1234560012ABC1 /* Frameworks */,
+				1D4A5B242B1234560012ABC1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SayChord;
+			productName = SayChord;
+			productReference = 1D4A5B262B1234560012ABC1 /* SayChord.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1D4A5B1E2B1234560012ABC1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					1D4A5B252B1234560012ABC1 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = 1D4A5B212B1234560012ABC1 /* Build configuration list for PBXProject "SayChord" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 1D4A5B1D2B1234560012ABC1;
+			productRefGroup = 1D4A5B272B1234560012ABC1 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1D4A5B252B1234560012ABC1 /* SayChord */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1D4A5B242B1234560012ABC1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D4A5B312B1234580012ABC1 /* Preview Assets.xcassets in Resources */,
+				1D4A5B2E2B1234580012ABC1 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1D4A5B222B1234560012ABC1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D4A5B2C2B1234560012ABC1 /* ContentView.swift in Sources */,
+				1D4A5B3A2B1234890012ABC1 /* ChordParser.swift in Sources */,
+				1D4A5B382B1234790012ABC1 /* SpeechRecognizer.swift in Sources */,
+				1D4A5B442B1234D90012ABC1 /* ChordViewModel.swift in Sources */,
+				1D4A5B422B1234C90012ABC1 /* AudioRecorder.swift in Sources */,
+				1D4A5B3E2B1234A90012ABC1 /* ChordSequencer.swift in Sources */,
+				1D4A5B2A2B1234560012ABC1 /* SayChordApp.swift in Sources */,
+				1D4A5B402B1234B90012ABC1 /* MIDIExporter.swift in Sources */,
+				1D4A5B3C2B1234990012ABC1 /* AudioSynthesizer.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1D4A5B322B1234580012ABC1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		1D4A5B332B1234580012ABC1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		1D4A5B352B1234580012ABC1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"SayChord/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SayChord/Info.plist;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "SayChord needs access to your microphone to recognize chord names.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "SayChord uses speech recognition to convert your spoken chord names into music.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.saychord.ios;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1D4A5B362B1234580012ABC1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"SayChord/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SayChord/Info.plist;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "SayChord needs access to your microphone to recognize chord names.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "SayChord uses speech recognition to convert your spoken chord names into music.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.saychord.ios;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1D4A5B212B1234560012ABC1 /* Build configuration list for PBXProject "SayChord" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1D4A5B322B1234580012ABC1 /* Debug */,
+				1D4A5B332B1234580012ABC1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1D4A5B342B1234580012ABC1 /* Build configuration list for PBXNativeTarget "SayChord" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1D4A5B352B1234580012ABC1 /* Debug */,
+				1D4A5B362B1234580012ABC1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1D4A5B1E2B1234560012ABC1 /* Project object */;
+}
