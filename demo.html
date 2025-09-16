@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SayChord Demo - Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test SayChord Demo</h1>
+    
+    <div class="test-section">
+        <h2>Test du Parseur d'Accords</h2>
+        <button onclick="testParser()">Tester le parseur</button>
+        <div id="parserResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test de l'Audio</h2>
+        <button onclick="testAudio()">Jouer un accord de Do majeur</button>
+        <button onclick="testSequence()">Jouer une progression II-V-I</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Lancer l'Application</h2>
+        <a href="index.html"><button>Ouvrir SayChord</button></a>
+    </div>
+
+    <script src="js/audio-engine.js"></script>
+    <script src="js/chord-parser.js"></script>
+    <script>
+        function testParser() {
+            const testInputs = [
+                "do majeur",
+                "la mineur",
+                "sol septième",
+                "ré dièse mineur",
+                "C",
+                "Am",
+                "G7",
+                "F#maj7"
+            ];
+            
+            let results = "";
+            testInputs.forEach(input => {
+                const chord = window.chordParser.parseVoiceInput(input);
+                if (chord) {
+                    results += `"${input}" → ${chord.symbol} (${chord.notes.join(', ')})\n`;
+                } else {
+                    results += `"${input}" → Non reconnu\n`;
+                }
+            });
+            
+            document.getElementById('parserResult').textContent = results;
+        }
+
+        function testAudio() {
+            window.audioEngine.resume().then(() => {
+                const chord = window.chordParser.parseVoiceInput("C");
+                if (chord && chord.notes) {
+                    window.audioEngine.playChord(chord.notes);
+                }
+            });
+        }
+
+        function testSequence() {
+            window.audioEngine.resume().then(() => {
+                const progression = ["Dm7", "G7", "Cmaj7"];
+                let delay = 0;
+                
+                progression.forEach(chordName => {
+                    setTimeout(() => {
+                        const chord = window.chordParser.parseVoiceInput(chordName);
+                        if (chord && chord.notes) {
+                            window.audioEngine.playChord(chord.notes, 1);
+                        }
+                    }, delay);
+                    delay += 1000;
+                });
+            });
+        }
+    </script>
+</body>
+</html>
