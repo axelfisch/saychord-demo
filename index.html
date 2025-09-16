@@ -3,210 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SayChord - Dictée vocale d'accords</title>
-    <!-- Liens vers les feuilles de style avec chemins relatifs -->
-    <link rel="stylesheet" href="./css/styles.css">
-    <!-- Polices Google -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    <!-- Icônes Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>SayChord - Dictée Vocale d'Accords Musicaux</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <header>
-        <div class="container header-container">
-            <div class="logo">SayChord</div>
-            <ul class="nav-links">
-                <li><a href="#features">Fonctionnalités</a></li>
-                <li><a href="#how-it-works">Comment ça marche</a></li>
-                <li><a href="#app">Essayer</a></li>
-            </ul>
-        </div>
-    </header>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-music"></i> SayChord</h1>
+            <p class="subtitle">Dictée vocale d'accords musicaux</p>
+        </header>
 
-    <section class="hero">
-        <div class="container">
-            <h1>Dictée vocale d'accords musicaux</h1>
-            <p>Créez des séquences d'accords simplement en les dictant. Entendez-les joués avec un son de piano électrique FM de qualité.</p>
-            <a href="#app" class="btn">Essayer maintenant</a>
-        </div>
-    </section>
+        <main>
+            <!-- Voice Recognition Section -->
+            <section class="voice-section">
+                <div class="voice-controls">
+                    <button id="voiceBtn" class="voice-btn">
+                        <i class="fas fa-microphone"></i>
+                        <span>Commencer la dictée</span>
+                    </button>
+                    <div id="voiceStatus" class="voice-status"></div>
+                </div>
+                <div id="recognizedText" class="recognized-text"></div>
+            </section>
 
-    <section id="features" class="features">
-        <div class="container">
-            <h2>Fonctionnalités principales</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-microphone"></i></div>
-                    <h3>Dictée vocale</h3>
-                    <p>Dictez vos accords à haute voix et voyez-les instantanément reconnus.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-music"></i></div>
-                    <h3>Son de piano électrique FM</h3>
-                    <p>Écoutez vos accords joués avec un son de piano électrique FM de qualité.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-list"></i></div>
-                    <h3>Séquences d'accords</h3>
-                    <p>Créez et sauvegardez des séquences d'accords pour composer facilement.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-comment"></i></div>
-                    <h3>Commandes vocales intuitives</h3>
-                    <p>Interface simple et intuitive pour une expérience utilisateur fluide.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="how-it-works" class="how-it-works">
-        <div class="container">
-            <h2>Comment ça marche</h2>
-            <div class="steps">
-                <div class="step">
-                    <h3>Dictez un accord</h3>
-                    <p>Appuyez sur le bouton microphone et dictez le nom d'un accord, comme "Cmaj7" ou "Fa mineur 7".</p>
-                </div>
-                <div class="step">
-                    <h3>Écoutez le résultat</h3>
-                    <p>L'accord est instantanément joué avec un son de piano électrique FM de qualité.</p>
-                </div>
-                <div class="step">
-                    <h3>Créez des séquences</h3>
-                    <p>Ajoutez l'accord à votre séquence et continuez à dicter pour créer des progressions complètes.</p>
-                </div>
-                <div class="step">
-                    <h3>Exportez votre création</h3>
-                    <p>Exportez votre séquence d'accords au format audio WAV ou en notation musicale PDF.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="app" class="app-container">
-        <div class="container main-content">
-            <h2>Essayez SayChord</h2>
-            
-            <div class="control-panel">
-                <div class="mic-button" id="mic-button">
-                    <i class="fas fa-microphone"></i>
-                </div>
-                <p class="mic-instruction">Cliquez sur le microphone et dictez un accord</p>
-                
-                <div class="chord-display">
-                    <div class="chord-name" id="chord-name">-</div>
-                    <div class="chord-notes" id="chord-notes">Dictez un accord pour commencer</div>
-                </div>
-                
-                <div class="piano-keyboard" id="piano-keyboard">
-                    <!-- Les touches de piano seront générées par JavaScript -->
-                </div>
-            </div>
-            
-            <div class="sequence-panel">
-                <h3>Séquence d'accords</h3>
-                
-                <ul class="sequence-list" id="sequence-list">
-                    <li class="sequence-item empty">La séquence est vide. Dictez des accords pour les ajouter.</li>
-                </ul>
-                
-                <div class="playback-controls">
-                    <button id="play-button" title="Jouer la séquence">
+            <!-- Chord Display Section -->
+            <section class="chord-display">
+                <h2>Accord détecté</h2>
+                <div id="currentChord" class="current-chord">
+                    <span class="chord-name">--</span>
+                    <button id="playChordBtn" class="play-btn" disabled>
                         <i class="fas fa-play"></i>
                     </button>
-                    <button id="stop-button" title="Arrêter la lecture">
-                        <i class="fas fa-stop"></i>
+                </div>
+            </section>
+
+            <!-- Sequencer Section -->
+            <section class="sequencer-section">
+                <h2>Séquenceur</h2>
+                <div class="sequencer-controls">
+                    <button id="addToSequenceBtn" class="control-btn" disabled>
+                        <i class="fas fa-plus"></i> Ajouter à la séquence
                     </button>
-                    <button id="loop-button" title="Activer/désactiver la lecture en boucle">
-                        <i class="fas fa-sync-alt"></i>
+                    <button id="playSequenceBtn" class="control-btn" disabled>
+                        <i class="fas fa-play"></i> Jouer
+                    </button>
+                    <button id="stopSequenceBtn" class="control-btn" disabled>
+                        <i class="fas fa-stop"></i> Arrêter
+                    </button>
+                    <button id="loopBtn" class="control-btn" disabled>
+                        <i class="fas fa-redo"></i> Boucle
+                    </button>
+                    <button id="clearSequenceBtn" class="control-btn" disabled>
+                        <i class="fas fa-trash"></i> Effacer
                     </button>
                 </div>
-                
+                <div id="sequenceDisplay" class="sequence-display"></div>
                 <div class="tempo-control">
-                    <label for="tempo-slider">Tempo: <span id="tempo-value">120 BPM</span></label>
-                    <input type="range" id="tempo-slider" min="40" max="240" value="120" class="tempo-slider">
+                    <label for="tempoSlider">Tempo: <span id="tempoValue">120</span> BPM</label>
+                    <input type="range" id="tempoSlider" min="60" max="200" value="120">
                 </div>
-                
-                <div class="export-options">
-                    <button id="export-wav" class="btn">Exporter en WAV</button>
-                    <button id="export-pdf" class="btn btn-secondary">Exporter en PDF</button>
-                </div>
-            </div>
-        </div>
-    </section>
+            </section>
 
-    <section class="cta">
-        <div class="container">
-            <h2>Prêt à composer avec votre voix ?</h2>
-            <p>SayChord est l'outil idéal pour les musiciens qui souhaitent capturer rapidement leurs idées d'accords sans interrompre leur flux créatif.</p>
-            <a href="#app" class="btn">Essayer maintenant</a>
-        </div>
-    </section>
-
-    <footer>
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-col">
-                    <h3>SayChord</h3>
-                    <p>Application de dictée vocale d'accords musicaux.</p>
+            <!-- Export Section -->
+            <section class="export-section">
+                <h2>Exporter</h2>
+                <div class="export-controls">
+                    <button id="exportMidiBtn" class="export-btn" disabled>
+                        <i class="fas fa-file-audio"></i> Exporter en MIDI
+                    </button>
+                    <button id="exportTextBtn" class="export-btn" disabled>
+                        <i class="fas fa-file-alt"></i> Exporter en texte
+                    </button>
                 </div>
-                <div class="footer-col">
-                    <h3>Liens rapides</h3>
-                    <ul class="footer-links">
-                        <li><a href="#features">Fonctionnalités</a></li>
-                        <li><a href="#how-it-works">Comment ça marche</a></li>
-                        <li><a href="#app">Essayer</a></li>
+            </section>
+
+            <!-- Help Section -->
+            <section class="help-section">
+                <h2>Commandes vocales</h2>
+                <div class="help-content">
+                    <p>Dictez vos accords en utilisant les formats suivants :</p>
+                    <ul>
+                        <li>"Do majeur", "C majeur", ou simplement "C"</li>
+                        <li>"La mineur", "A mineur", "Am"</li>
+                        <li>"Sol septième", "G7"</li>
+                        <li>"Ré suspendu quatre", "Dsus4"</li>
+                        <li>"Fa dièse mineur", "F#m"</li>
                     </ul>
                 </div>
-                <div class="footer-col">
-                    <h3>Suivez-nous</h3>
-                    <ul class="social-links">
-                        <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                        <li><a href="#"><i class="fab fa-facebook"></i></a></li>
-                        <li><a href="#"><i class="fab fa-instagram"></i></a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="copyright">
-                &copy; 2025 SayChord. Tous droits réservés.
-            </div>
-        </div>
-    </footer>
+            </section>
+        </main>
 
-    <!-- Script principal -->
-    <script type="module" src="./js/main.js"></script>
-    
-    <!-- Message spécifique pour GitHub Pages -->
-    <script>
-        // Vérifier si l'application est exécutée sur GitHub Pages
-        if (window.location.hostname.includes('github.io' )) {
-            console.log('Application exécutée sur GitHub Pages - Adaptations spécifiques activées');
-            
-            // Ajouter un message d'information pour les utilisateurs de la démo
-            document.addEventListener('DOMContentLoaded', function() {
-                const appSection = document.getElementById('app');
-                if (appSection) {
-                    const demoMessage = document.createElement('div');
-                    demoMessage.className = 'permission-request show';
-                    demoMessage.innerHTML = `
-                        <p><strong>Démo GitHub Pages</strong> - Pour utiliser toutes les fonctionnalités :</p>
-                        <ol>
-                            <li>Cliquez sur le bouton microphone pour autoriser l'accès au microphone</li>
-                            <li>Interagissez avec la page pour activer l'audio</li>
-                            <li>Utilisez Chrome, Edge ou Safari pour une expérience optimale</li>
-                        </ol>
-                        <button id="dismiss-demo-message">Compris</button>
-                    `;
-                    
-                    appSection.querySelector('.container').insertBefore(demoMessage, appSection.querySelector('h2'));
-                    
-                    // Ajouter un gestionnaire pour masquer le message
-                    document.getElementById('dismiss-demo-message').addEventListener('click', function() {
-                        demoMessage.style.display = 'none';
-                    });
-                }
-            });
-        }
-    </script>
+        <footer>
+            <p>&copy; 2025 SayChord Demo - Application de dictée vocale d'accords musicaux</p>
+        </footer>
+    </div>
+
+    <script src="js/audio-engine.js"></script>
+    <script src="js/chord-parser.js"></script>
+    <script src="js/voice-recognition.js"></script>
+    <script src="js/sequencer.js"></script>
+    <script src="js/export.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
