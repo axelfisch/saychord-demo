@@ -9,6 +9,7 @@ class Synthesizer {
         this.initPromise = null;
         this.fmSynths = {};
         this.reverb = null;
+        this.reverbGain = null;
         this.isPlaying = false;
     }
 
@@ -68,12 +69,12 @@ class Synthesizer {
         convolver.buffer = buffer;
         
         // Créer un nœud de gain pour contrôler le niveau de réverbération
-        const reverbGain = this.audioContext.createGain();
-        reverbGain.gain.value = 0.2;
+        this.reverbGain = this.audioContext.createGain();
+        this.reverbGain.gain.value = 0.2;
         
         // Connecter le convolver au gain de réverbération
-        convolver.connect(reverbGain);
-        reverbGain.connect(this.masterGain);
+        convolver.connect(this.reverbGain);
+        this.reverbGain.connect(this.masterGain);
         
         return convolver;
     }
