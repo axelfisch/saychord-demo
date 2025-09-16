@@ -23,10 +23,14 @@ class SequenceManager {
         this.tempoSlider = null;
         this.tempoValue = null;
         
-        // Initialiser les éléments DOM après le chargement de la page
-        document.addEventListener('DOMContentLoaded', () => {
+        // Initialiser les éléments DOM dès que possible
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                this.initDOMElements();
+            });
+        } else {
             this.initDOMElements();
-        });
+        }
     }
 
     // Initialiser les références aux éléments DOM
@@ -170,7 +174,7 @@ class SequenceManager {
             
             // Arrêter le son
             if (this.synthesizer) {
-                this.synthesizer.stopAllOscillators();
+                this.synthesizer.stopAllNotes();
             }
             
             // Mettre à jour l'interface
@@ -213,6 +217,41 @@ class SequenceManager {
             console.error('Erreur lors de la modification du mode de lecture en boucle :', error);
             return false;
         }
+    }
+
+    // Compatibilité avec d'autres modules/tests
+    play() {
+        return this.playSequence();
+    }
+
+    stop() {
+        return this.stopSequence();
+    }
+
+    setLooping(enabled) {
+        try {
+            const shouldLoop = !!enabled;
+            this.isLooping = shouldLoop;
+            if (this.loopButton) {
+                if (shouldLoop) {
+                    this.loopButton.classList.add('active');
+                } else {
+                    this.loopButton.classList.remove('active');
+                }
+            }
+            return true;
+        } catch (error) {
+            console.error('Erreur lors du réglage du mode boucle :', error);
+            return false;
+        }
+    }
+
+    exportWAV() {
+        return this.exportToWAV();
+    }
+
+    exportPDF() {
+        return this.exportToPDF();
     }
 
     // Définir le tempo (BPM)

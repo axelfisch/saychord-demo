@@ -10,6 +10,8 @@ class VoiceRecognition {
         this.onResultCallback = null;
         this.onErrorCallback = null;
         this.adapter = new VoiceRecognitionAdapter(); // Utilise l'adaptateur pour améliorer la reconnaissance
+        this.onStartCallbacks = [];
+        this.onEndCallbacks = [];
         this.setupRecognition();
     }
 
@@ -57,6 +59,12 @@ class VoiceRecognition {
             this.recognition.start();
             this.isListening = true;
             console.log("Reconnaissance vocale démarrée");
+            // Déclencher les callbacks de démarrage
+            try {
+                this.onStartCallbacks.forEach(cb => {
+                    try { cb(); } catch (e) { console.error('Erreur dans onStart callback:', e); }
+                });
+            } catch (_) {}
             
             // Afficher une demande d'autorisation si nécessaire
             this.showPermissionRequest();
@@ -125,6 +133,12 @@ class VoiceRecognition {
     handleEnd() {
         this.isListening = false;
         console.log("Session de reconnaissance vocale terminée");
+        // Déclencher les callbacks de fin
+        try {
+            this.onEndCallbacks.forEach(cb => {
+                try { cb(); } catch (e) { console.error('Erreur dans onEnd callback:', e); }
+            });
+        } catch (_) {}
     }
 
     showPermissionRequest() {
@@ -167,12 +181,28 @@ class VoiceRecognition {
         }
         
         // Afficher un message d'erreur dans l'interface
-        const appContainer = document.querySelector('#app-container');
+        const appContainer = document.querySelector('#app') || document.body;
         if (appContainer) {
             const errorElement = document.createElement('div');
             errorElement.className = 'error-message';
             errorElement.textContent = errorMessage;
-            appContainer.prepend(errorElement);
+            if (appContainer.prepend) {
+                appContainer.prepend(errorElement);
+            } else {
+                appContainer.insertBefore(errorElement, appContainer.firstChild);
+            }
+        }
+    }
+
+    onStart(callback) {
+        if (typeof callback === 'function') {
+            this.onStartCallbacks.push(callback);
+        }
+    }
+
+    onEnd(callback) {
+        if (typeof callback === 'function') {
+            this.onEndCallbacks.push(callback);
         }
     }
 }
