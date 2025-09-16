@@ -67,6 +67,118 @@ async function initApp() {
             uiController
         };
         
+        // Exposer un bridge pour une application iOS native (WKWebView)
+        if (!window.SayChordBridge) {
+            const notifySwift = (payload) => {
+                try {
+                    if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.saychord) {
+                        window.webkit.messageHandlers.saychord.postMessage(payload);
+                    }
+                } catch (e) {
+                    console.warn('notifySwift failed', e);
+                }
+            };
+
+            // Envelopper quelques méthodes clés pour remonter des événements côté Swift
+            try {
+                const originalAddChord = sequenceManager.addChord.bind(sequenceManager);
+                sequenceManager.addChord = (chord) => {
+                    const ok = originalAddChord(chord);
+                    if (ok && chord && chord.nom) {
+                        notifySwift({ event: 'chordAdded', chord: chord.nom });
+                    }
+                    return ok;
+                };
+
+                const originalPlay = sequenceManager.playSequence.bind(sequenceManager);
+                sequenceManager.playSequence = () => {
+                    const ok = originalPlay();
+                    if (ok) notifySwift({ event: 'playbackStarted' });
+                    return ok;
+                };
+
+                const originalStop = sequenceManager.stopSequence.bind(sequenceManager);
+                sequenceManager.stopSequence = () => {
+                    const ok = originalStop();
+                    if (ok) notifySwift({ event: 'playbackStopped' });
+                    return ok;
+                };
+
+                const originalSetTempo = sequenceManager.setTempo.bind(sequenceManager);
+                sequenceManager.setTempo = (bpm) => {
+                    const ok = originalSetTempo(bpm);
+                    if (ok) notifySwift({ event: 'tempoChanged', bpm });
+                    return ok;
+                };
+            } catch (e) {
+                console.warn('Bridge wrapping failed', e);
+            }
+
+            window.SayChordBridge = {
+                ingestRecognizedText: (text) => {
+                    try {
+                        const processed = (voiceRecognition && voiceRecognition.adapter && typeof voiceRecognition.adapter.processText === 'function')
+                            ? voiceRecognition.adapter.processText(text)
+                            : text;
+                        const chord = chordDictionary.findChord(processed);
+                        if (chord) {
+                            synthesizer.playChord(chord);
+                            sequenceManager.addChord(chord);
+                            notifySwift({ event: 'chordRecognized', text: processed, chord: chord.nom });
+                            return true;
+                        } else {
+                            notifySwift({ event: 'chordNotRecognized', text: processed });
+                            return false;
+                        }
+                    } catch (e) {
+                        console.error('ingestRecognizedText error:', e);
+                        notifySwift({ event: 'error', message: String(e) });
+                        return false;
+                    }
+                },
+                playChordByName: (name) => {
+                    const chord = chordDictionary.findChord(name);
+                    if (!chord) {
+                        notifySwift({ event: 'chordNotFound', name });
+                        return false;
+                    }
+                    synthesizer.playChord(chord);
+                    notifySwift({ event: 'chordPlayed', chord: chord.nom });
+                    return true;
+                },
+                addChordByName: (name) => {
+                    const chord = chordDictionary.findChord(name);
+                    if (!chord) {
+                        notifySwift({ event: 'chordNotFound', name });
+                        return false;
+                    }
+                    const ok = sequenceManager.addChord(chord);
+                    return ok;
+                },
+                clearSequence: () => {
+                    const ok = sequenceManager.clearSequence();
+                    if (ok) notifySwift({ event: 'sequenceCleared' });
+                    return ok;
+                },
+                playSequence: () => sequenceManager.playSequence(),
+                stopSequence: () => sequenceManager.stopSequence(),
+                setTempo: (bpm) => sequenceManager.setTempo(parseInt(bpm, 10)),
+                resumeAudio: async () => {
+                    try {
+                        if (synthesizer && synthesizer.audioContext && synthesizer.audioContext.state === 'suspended') {
+                            await synthesizer.audioContext.resume();
+                        }
+                        return true;
+                    } catch (e) {
+                        notifySwift({ event: 'error', message: 'resumeAudio failed' });
+                        return false;
+                    }
+                }
+            };
+
+            console.log('SayChordBridge initialized');
+        }
+        
         console.log('Application SayChord initialisée avec succès');
     } catch (error) {
         console.error('Erreur lors de l\'initialisation de l\'application:', error);
