@@ -3,210 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SayChord - Dictée vocale d'accords</title>
-    <!-- Liens vers les feuilles de style avec chemins relatifs -->
+    <title>AiXel Music Orchestrator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-H1+8JQDFcE4Z1xXHDD236UMtO4Okzp1KimG++Hj6kUMlzUxr87hcPLZ9eczsQnUnxE27XGr0CcsUWi5V5r9/tQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="./css/styles.css">
-    <!-- Polices Google -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    <!-- Icônes Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-    <header>
-        <div class="container header-container">
-            <div class="logo">SayChord</div>
-            <ul class="nav-links">
-                <li><a href="#features">Fonctionnalités</a></li>
-                <li><a href="#how-it-works">Comment ça marche</a></li>
-                <li><a href="#app">Essayer</a></li>
-            </ul>
-        </div>
-    </header>
-
-    <section class="hero">
-        <div class="container">
-            <h1>Dictée vocale d'accords musicaux</h1>
-            <p>Créez des séquences d'accords simplement en les dictant. Entendez-les joués avec un son de piano électrique FM de qualité.</p>
-            <a href="#app" class="btn">Essayer maintenant</a>
-        </div>
-    </section>
-
-    <section id="features" class="features">
-        <div class="container">
-            <h2>Fonctionnalités principales</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-microphone"></i></div>
-                    <h3>Dictée vocale</h3>
-                    <p>Dictez vos accords à haute voix et voyez-les instantanément reconnus.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-music"></i></div>
-                    <h3>Son de piano électrique FM</h3>
-                    <p>Écoutez vos accords joués avec un son de piano électrique FM de qualité.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-list"></i></div>
-                    <h3>Séquences d'accords</h3>
-                    <p>Créez et sauvegardez des séquences d'accords pour composer facilement.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-comment"></i></div>
-                    <h3>Commandes vocales intuitives</h3>
-                    <p>Interface simple et intuitive pour une expérience utilisateur fluide.</p>
+    <div class="app-shell">
+        <header class="app-header">
+            <div class="header-left">
+                <h1>AiXel Music Orchestrator</h1>
+                <p class="subtitle">Interface circulaire pour générer et jouer des progressions AiXEL</p>
+            </div>
+            <div class="header-right">
+                <div class="bpm-control">
+                    <label for="bpm-slider">Tempo</label>
+                    <div class="bpm-value"><span id="bpm-value">90</span> BPM</div>
+                    <input type="range" id="bpm-slider" min="60" max="160" value="90">
                 </div>
             </div>
-        </div>
-    </section>
+        </header>
 
-    <section id="how-it-works" class="how-it-works">
-        <div class="container">
-            <h2>Comment ça marche</h2>
-            <div class="steps">
-                <div class="step">
-                    <h3>Dictez un accord</h3>
-                    <p>Appuyez sur le bouton microphone et dictez le nom d'un accord, comme "Cmaj7" ou "Fa mineur 7".</p>
+        <main class="layout">
+            <aside class="rotation-controls" aria-label="Contrôles de rotation">
+                <div class="control-group" data-rotation="styles">
+                    <div class="group-header">
+                        <span class="dot dot-styles"></span>
+                        <div class="group-text">
+                            <h2>Styles</h2>
+                            <p>Pivote les segments des styles</p>
+                        </div>
+                    </div>
+                    <div class="button-row">
+                        <button class="rotate-button" data-action="rotateStylesLeft" aria-label="Tourner les styles vers la gauche">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <div class="rotation-indicator">
+                            <span data-bind-rotation="styles">0°</span>
+                        </div>
+                        <button class="rotate-button" data-action="rotateStylesRight" aria-label="Tourner les styles vers la droite">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
                 </div>
-                <div class="step">
-                    <h3>Écoutez le résultat</h3>
-                    <p>L'accord est instantanément joué avec un son de piano électrique FM de qualité.</p>
-                </div>
-                <div class="step">
-                    <h3>Créez des séquences</h3>
-                    <p>Ajoutez l'accord à votre séquence et continuez à dicter pour créer des progressions complètes.</p>
-                </div>
-                <div class="step">
-                    <h3>Exportez votre création</h3>
-                    <p>Exportez votre séquence d'accords au format audio WAV ou en notation musicale PDF.</p>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <section id="app" class="app-container">
-        <div class="container main-content">
-            <h2>Essayez SayChord</h2>
-            
-            <div class="control-panel">
-                <div class="mic-button" id="mic-button">
-                    <i class="fas fa-microphone"></i>
+                <div class="control-group" data-rotation="keys">
+                    <div class="group-header">
+                        <span class="dot dot-keys"></span>
+                        <div class="group-text">
+                            <h2>Keys</h2>
+                            <p>Aligne les tonalités autour du cercle</p>
+                        </div>
+                    </div>
+                    <div class="button-row">
+                        <button class="rotate-button" data-action="rotateKeysLeft" aria-label="Tourner les tonalités vers la gauche">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <div class="rotation-indicator">
+                            <span data-bind-rotation="keys">0°</span>
+                        </div>
+                        <button class="rotate-button" data-action="rotateKeysRight" aria-label="Tourner les tonalités vers la droite">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
                 </div>
-                <p class="mic-instruction">Cliquez sur le microphone et dictez un accord</p>
-                
-                <div class="chord-display">
-                    <div class="chord-name" id="chord-name">-</div>
-                    <div class="chord-notes" id="chord-notes">Dictez un accord pour commencer</div>
+
+                <div class="control-group" data-rotation="extensions">
+                    <div class="group-header">
+                        <span class="dot dot-extensions"></span>
+                        <div class="group-text">
+                            <h2>Extensions</h2>
+                            <p>Fais tourner les couleurs harmoniques</p>
+                        </div>
+                    </div>
+                    <div class="button-row">
+                        <button class="rotate-button" data-action="rotateExtensionsLeft" aria-label="Tourner les extensions vers la gauche">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <div class="rotation-indicator">
+                            <span data-bind-rotation="extensions">0°</span>
+                        </div>
+                        <button class="rotate-button" data-action="rotateExtensionsRight" aria-label="Tourner les extensions vers la droite">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
                 </div>
-                
-                <div class="piano-keyboard" id="piano-keyboard">
-                    <!-- Les touches de piano seront générées par JavaScript -->
+
+                <div class="control-group" data-rotation="bass">
+                    <div class="group-header">
+                        <span class="dot dot-bass"></span>
+                        <div class="group-text">
+                            <h2>Bass</h2>
+                            <p>Choisis les renversements de basse</p>
+                        </div>
+                    </div>
+                    <div class="button-row">
+                        <button class="rotate-button" data-action="rotateBassLeft" aria-label="Tourner les basses vers la gauche">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <div class="rotation-indicator">
+                            <span data-bind-rotation="bass">0°</span>
+                        </div>
+                        <button class="rotate-button" data-action="rotateBassRight" aria-label="Tourner les basses vers la droite">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="sequence-panel">
-                <h3>Séquence d'accords</h3>
-                
-                <ul class="sequence-list" id="sequence-list">
-                    <li class="sequence-item empty">La séquence est vide. Dictez des accords pour les ajouter.</li>
-                </ul>
-                
-                <div class="playback-controls">
-                    <button id="play-button" title="Jouer la séquence">
+            </aside>
+
+            <section class="canvas-section" aria-label="Sélecteur circulaire">
+                <canvas id="circular-canvas" width="640" height="640" role="img" aria-label="Sélecteur circulaire AiXEL"></canvas>
+                <div class="canvas-overlay">
+                    <div class="overlay-label">Mode AiXEL</div>
+                    <p class="overlay-description">Choisissez une tonalité, une extension, un renversement et un style pour générer une progression à jouer.</p>
+                </div>
+            </section>
+
+            <aside class="selection-panel" aria-label="Paramètres sélectionnés">
+                <h2>Current Selection</h2>
+                <dl class="selection-fields">
+                    <div class="field">
+                        <dt>Key</dt>
+                        <dd data-bind="selectedKey">C</dd>
+                    </div>
+                    <div class="field">
+                        <dt>Extension</dt>
+                        <dd data-bind="selectedExtension">—</dd>
+                    </div>
+                    <div class="field">
+                        <dt>Bass inversion</dt>
+                        <dd data-bind="selectedBassInversion">—</dd>
+                    </div>
+                    <div class="field">
+                        <dt>Style</dt>
+                        <dd data-bind="selectedStyle">—</dd>
+                    </div>
+                    <div class="field">
+                        <dt>Full chord</dt>
+                        <dd data-bind="fullChordSymbol">C</dd>
+                    </div>
+                </dl>
+
+                <section class="progression-section">
+                    <h3>Progression courante</h3>
+                    <ul class="progression-list" id="progression-list">
+                        <li class="empty">Aucune progression générée</li>
+                    </ul>
+                </section>
+
+                <div class="action-buttons">
+                    <button class="action" id="play-progression">
                         <i class="fas fa-play"></i>
+                        Play progression
                     </button>
-                    <button id="stop-button" title="Arrêter la lecture">
+                    <button class="action" id="stop-playback">
                         <i class="fas fa-stop"></i>
+                        Stop
                     </button>
-                    <button id="loop-button" title="Activer/désactiver la lecture en boucle">
-                        <i class="fas fa-sync-alt"></i>
+                    <button class="action primary" id="generate-axel-progression">
+                        <i class="fas fa-bolt"></i>
+                        Generate AiXEL progression
                     </button>
                 </div>
-                
-                <div class="tempo-control">
-                    <label for="tempo-slider">Tempo: <span id="tempo-value">120 BPM</span></label>
-                    <input type="range" id="tempo-slider" min="40" max="240" value="120" class="tempo-slider">
-                </div>
-                
-                <div class="export-options">
-                    <button id="export-wav" class="btn">Exporter en WAV</button>
-                    <button id="export-pdf" class="btn btn-secondary">Exporter en PDF</button>
-                </div>
-            </div>
-        </div>
-    </section>
+            </aside>
+        </main>
+    </div>
 
-    <section class="cta">
-        <div class="container">
-            <h2>Prêt à composer avec votre voix ?</h2>
-            <p>SayChord est l'outil idéal pour les musiciens qui souhaitent capturer rapidement leurs idées d'accords sans interrompre leur flux créatif.</p>
-            <a href="#app" class="btn">Essayer maintenant</a>
-        </div>
-    </section>
-
-    <footer>
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-col">
-                    <h3>SayChord</h3>
-                    <p>Application de dictée vocale d'accords musicaux.</p>
-                </div>
-                <div class="footer-col">
-                    <h3>Liens rapides</h3>
-                    <ul class="footer-links">
-                        <li><a href="#features">Fonctionnalités</a></li>
-                        <li><a href="#how-it-works">Comment ça marche</a></li>
-                        <li><a href="#app">Essayer</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h3>Suivez-nous</h3>
-                    <ul class="social-links">
-                        <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                        <li><a href="#"><i class="fab fa-facebook"></i></a></li>
-                        <li><a href="#"><i class="fab fa-instagram"></i></a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="copyright">
-                &copy; 2025 SayChord. Tous droits réservés.
-            </div>
-        </div>
-    </footer>
-
-    <!-- Script principal -->
-    <script type="module" src="./js/main.js"></script>
-    
-    <!-- Message spécifique pour GitHub Pages -->
-    <script>
-        // Vérifier si l'application est exécutée sur GitHub Pages
-        if (window.location.hostname.includes('github.io' )) {
-            console.log('Application exécutée sur GitHub Pages - Adaptations spécifiques activées');
-            
-            // Ajouter un message d'information pour les utilisateurs de la démo
-            document.addEventListener('DOMContentLoaded', function() {
-                const appSection = document.getElementById('app');
-                if (appSection) {
-                    const demoMessage = document.createElement('div');
-                    demoMessage.className = 'permission-request show';
-                    demoMessage.innerHTML = `
-                        <p><strong>Démo GitHub Pages</strong> - Pour utiliser toutes les fonctionnalités :</p>
-                        <ol>
-                            <li>Cliquez sur le bouton microphone pour autoriser l'accès au microphone</li>
-                            <li>Interagissez avec la page pour activer l'audio</li>
-                            <li>Utilisez Chrome, Edge ou Safari pour une expérience optimale</li>
-                        </ol>
-                        <button id="dismiss-demo-message">Compris</button>
-                    `;
-                    
-                    appSection.querySelector('.container').insertBefore(demoMessage, appSection.querySelector('h2'));
-                    
-                    // Ajouter un gestionnaire pour masquer le message
-                    document.getElementById('dismiss-demo-message').addEventListener('click', function() {
-                        demoMessage.style.display = 'none';
-                    });
-                }
-            });
-        }
-    </script>
+    <script type="module" src="./js/orchestrator.js"></script>
 </body>
 </html>
