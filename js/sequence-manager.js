@@ -3,6 +3,8 @@
  * Version adaptée pour GitHub Pages avec gestion des erreurs et compatibilité navigateur
  */
 
+import SequenceExporter from './sequence-exporter.js';
+
 class SequenceManager {
     constructor(synthesizer) {
         this.synthesizer = synthesizer;
@@ -22,6 +24,12 @@ class SequenceManager {
         this.loopButton = null;
         this.tempoSlider = null;
         this.tempoValue = null;
+        this.exportWavButton = null;
+        this.exportPdfButton = null;
+        this.exportMidiButton = null;
+        this.exportMusicXmlButton = null;
+        this.exportAbcButton = null;
+        this.exporter = new SequenceExporter();
         
         // Initialiser les éléments DOM après le chargement de la page
         document.addEventListener('DOMContentLoaded', () => {
@@ -38,6 +46,11 @@ class SequenceManager {
             this.loopButton = document.getElementById('loop-button');
             this.tempoSlider = document.getElementById('tempo-slider');
             this.tempoValue = document.getElementById('tempo-value');
+            this.exportWavButton = document.getElementById('export-wav');
+            this.exportPdfButton = document.getElementById('export-pdf');
+            this.exportMidiButton = document.getElementById('export-midi');
+            this.exportMusicXmlButton = document.getElementById('export-musicxml');
+            this.exportAbcButton = document.getElementById('export-abc');
             
             // Initialiser les écouteurs d'événements
             if (this.playButton) {
@@ -56,6 +69,26 @@ class SequenceManager {
                 this.tempoSlider.addEventListener('input', (e) => {
                     this.setTempo(parseInt(e.target.value));
                 });
+            }
+
+            if (this.exportWavButton) {
+                this.exportWavButton.addEventListener('click', () => this.exportToWAV());
+            }
+
+            if (this.exportPdfButton) {
+                this.exportPdfButton.addEventListener('click', () => this.exportToPDF());
+            }
+
+            if (this.exportMidiButton) {
+                this.exportMidiButton.addEventListener('click', () => this.exportToMIDI());
+            }
+
+            if (this.exportMusicXmlButton) {
+                this.exportMusicXmlButton.addEventListener('click', () => this.exportToMusicXML());
+            }
+
+            if (this.exportAbcButton) {
+                this.exportAbcButton.addEventListener('click', () => this.exportToABC());
             }
             
             console.log('Éléments DOM du gestionnaire de séquences initialisés');
@@ -392,16 +425,11 @@ class SequenceManager {
     // Exporter la séquence au format WAV
     exportToWAV() {
         try {
-            // Vérifier que la séquence n'est pas vide
-            if (this.sequence.length === 0) {
-                console.warn('La séquence est vide, impossible d\'exporter');
-                alert('La séquence est vide. Veuillez ajouter des accords avant d\'exporter.');
+            if (!this.ensureSequenceReady('WAV')) {
                 return false;
             }
-            
-            // Simuler l'export pour la démo GitHub Pages
-            alert('Fonctionnalité d\'export WAV simulée pour la démo GitHub Pages.\n\nDans la version complète, cette fonction permettrait d\'exporter la séquence d\'accords au format audio WAV.');
-            
+
+            alert('Export WAV complet disponible dans la version native. Utilisez les exports MIDI, MusicXML ou ABC pour récupérer la séquence immédiatement.');
             console.log('Export WAV simulé pour la démo GitHub Pages');
             return true;
         } catch (error) {
@@ -410,25 +438,93 @@ class SequenceManager {
         }
     }
 
-    // Exporter la séquence au format PDF
     exportToPDF() {
         try {
-            // Vérifier que la séquence n'est pas vide
-            if (this.sequence.length === 0) {
-                console.warn('La séquence est vide, impossible d\'exporter');
-                alert('La séquence est vide. Veuillez ajouter des accords avant d\'exporter.');
+            if (!this.ensureSequenceReady('PDF')) {
                 return false;
             }
-            
-            // Simuler l'export pour la démo GitHub Pages
-            alert('Fonctionnalité d\'export PDF simulée pour la démo GitHub Pages.\n\nDans la version complète, cette fonction permettrait d\'exporter la notation des accords au format PDF.');
-            
+
+            alert('Export PDF complet disponible dans la version native. Utilisez MusicXML pour obtenir une partition exploitable.');
             console.log('Export PDF simulé pour la démo GitHub Pages');
             return true;
         } catch (error) {
             console.error('Erreur lors de l\'export PDF :', error);
             return false;
         }
+    }
+
+    exportToMIDI() {
+        try {
+            if (!this.ensureSequenceReady('MIDI')) {
+                return false;
+            }
+
+            const midiBlob = this.exporter.downloadMIDI(this.prepareSequenceForExport(), this.tempo);
+            console.log('Export MIDI réussi', midiBlob);
+            return midiBlob;
+        } catch (error) {
+            console.error('Erreur lors de l\'export MIDI :', error);
+            alert('Impossible de créer le fichier MIDI. Consultez la console pour plus de détails.');
+            return false;
+        }
+    }
+
+    exportToMusicXML() {
+        try {
+            if (!this.ensureSequenceReady('MusicXML')) {
+                return false;
+            }
+
+            const xmlContent = this.exporter.downloadMusicXML(this.prepareSequenceForExport(), this.tempo, this.timeSignature);
+            console.log('Export MusicXML réussi');
+            return xmlContent;
+        } catch (error) {
+            console.error('Erreur lors de l\'export MusicXML :', error);
+            alert('Impossible de créer le fichier MusicXML. Consultez la console pour plus de détails.');
+            return false;
+        }
+    }
+
+    exportToABC() {
+        try {
+            if (!this.ensureSequenceReady('ABC')) {
+                return false;
+            }
+
+            const abcContent = this.exporter.downloadABC(this.prepareSequenceForExport(), this.tempo, this.timeSignature);
+            console.log('Export ABC réussi');
+            return abcContent;
+        } catch (error) {
+            console.error('Erreur lors de l\'export ABC :', error);
+            alert('Impossible de créer le fichier ABC. Consultez la console pour plus de détails.');
+            return false;
+        }
+    }
+
+    exportWAV() {
+        return this.exportToWAV();
+    }
+
+    exportPDF() {
+        return this.exportToPDF();
+    }
+
+    prepareSequenceForExport() {
+        return this.sequence.map((chord, index) => ({
+            nom: chord.nom || chord.name || `Accord ${index + 1}`,
+            name: chord.nom || chord.name || `Accord ${index + 1}`,
+            notes: Array.isArray(chord.notes) ? chord.notes : [],
+            categorie: chord.categorie || chord.category || 'majeur'
+        }));
+    }
+
+    ensureSequenceReady(label) {
+        if (this.sequence.length === 0) {
+            console.warn(`La séquence est vide, impossible d'exporter (${label})`);
+            alert('La séquence est vide. Veuillez ajouter des accords avant d\'exporter.');
+            return false;
+        }
+        return true;
     }
 }
 
