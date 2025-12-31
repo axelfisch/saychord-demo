@@ -9,6 +9,7 @@ class Synthesizer {
         this.initPromise = null;
         this.fmSynths = {};
         this.reverb = null;
+        this.reverbGain = null;
         this.isPlaying = false;
     }
 
@@ -39,6 +40,7 @@ class Synthesizer {
                 // Marquer comme initialisé
                 this.initialized = true;
                 console.log("Synthétiseur initialisé avec succès");
+                document.dispatchEvent(new CustomEvent('synthesizer:initialized'));
                 resolve();
             } catch (error) {
                 console.error("Erreur lors de l'initialisation du synthétiseur:", error);
@@ -70,6 +72,7 @@ class Synthesizer {
         // Créer un nœud de gain pour contrôler le niveau de réverbération
         const reverbGain = this.audioContext.createGain();
         reverbGain.gain.value = 0.2;
+        this.reverbGain = reverbGain;
         
         // Connecter le convolver au gain de réverbération
         convolver.connect(reverbGain);

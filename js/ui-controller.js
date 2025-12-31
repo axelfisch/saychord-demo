@@ -6,24 +6,25 @@ import VoiceRecognition from './voice-recognition.js';
 import SequenceManager from './sequence-manager.js';
 
 class UIController {
-    constructor() {
+    constructor(chordDictionary, voiceRecognition, synthesizer, sequenceManager) {
         // Initialiser les modules principaux
-        this.chordDictionary = new ChordDictionary();
-        this.synthesizer = new Synthesizer();
-        this.voiceRecognition = new VoiceRecognition(this.chordDictionary);
-        this.sequenceManager = new SequenceManager(this.synthesizer);
+        this.chordDictionary = chordDictionary || new ChordDictionary();
+        this.synthesizer = synthesizer || new Synthesizer();
+        this.voiceRecognition = voiceRecognition || new VoiceRecognition(this.chordDictionary);
+        this.sequenceManager = sequenceManager || new SequenceManager(this.synthesizer);
         
         // Éléments DOM
         this.micButton = document.getElementById('mic-button');
-        this.recognizedText = document.getElementById('recognized-text');
-        this.chordDisplay = document.getElementById('chord-display');
-        this.sequenceContainer = document.getElementById('sequence-container');
-        this.tempoInput = document.getElementById('tempo-input');
+        this.chordName = document.getElementById('chord-name');
+        this.chordNotes = document.getElementById('chord-notes');
+        this.sequenceList = document.getElementById('sequence-list');
+        this.tempoSlider = document.getElementById('tempo-slider');
         this.playButton = document.getElementById('play-button');
         this.stopButton = document.getElementById('stop-button');
-        this.clearButton = document.getElementById('clear-button');
+        this.loopButton = document.getElementById('loop-button');
         this.exportWavButton = document.getElementById('export-wav');
         this.exportPdfButton = document.getElementById('export-pdf');
+        this.exportJsonButton = document.getElementById('export-json');
         
         // État de l'interface
         this.isListening = false;
@@ -34,7 +35,9 @@ class UIController {
 
     async initializeUI() {
         // Charger le dictionnaire d'accords
-        await this.chordDictionary.loadDictionary('./chord-dictionary.json');
+        if (!this.chordDictionary.isLoaded) {
+            await this.chordDictionary.loadDictionary();
+        }
         
         // Configurer les gestionnaires d'événements
         this.setupEventListeners();
@@ -57,24 +60,21 @@ class UIController {
         
         // Contrôles de séquence
         if (this.playButton) {
-            this.playButton.addEventListener('click', () => this.sequenceManager.play());
+            this.playButton.addEventListener('click', () => this.sequenceManager.playSequence());
         }
         
         if (this.stopButton) {
-            this.stopButton.addEventListener('click', () => this.sequenceManager.stop());
+            this.stopButton.addEventListener('click', () => this.sequenceManager.stopSequence());
         }
-        
-        if (this.clearButton) {
-            this.clearButton.addEventListener('click', () => {
-                this.sequenceManager.clearSequence();
-                this.updateSequenceDisplay();
-            });
+
+        if (this.loopButton) {
+            this.loopButton.addEventListener('click', () => this.sequenceManager.toggleLoop());
         }
         
         // Contrôle du tempo
-        if (this.tempoInput) {
-            this.tempoInput.addEventListener('change', () => {
-                const tempo = parseInt(this.tempoInput.value);
+        if (this.tempoSlider) {
+            this.tempoSlider.addEventListener('input', () => {
+                const tempo = parseInt(this.tempoSlider.value);
                 this.sequenceManager.setTempo(tempo);
                 this.updateTempoDisplay();
             });
@@ -87,6 +87,10 @@ class UIController {
         
         if (this.exportPdfButton) {
             this.exportPdfButton.addEventListener('click', () => this.sequenceManager.exportToPDF());
+        }
+
+        if (this.exportJsonButton) {
+            this.exportJsonButton.addEventListener('click', () => this.sequenceManager.exportToJSON());
         }
         
         // Écouter l'événement de lecture d'accord
@@ -107,8 +111,8 @@ class UIController {
                 this.micButton.innerHTML = '<i class="fas fa-microphone"></i>';
             }
             
-            if (this.recognizedText) {
-                this.recognizedText.textContent = "Dictez un accord pour commencer";
+            if (this.chordNotes) {
+                this.chordNotes.textContent = "Dictez un accord pour commencer";
             }
         } else {
             // Démarrer la reconnaissance
@@ -125,35 +129,43 @@ class UIController {
                 this.micButton.innerHTML = '<i class="fas fa-stop"></i>';
             }
             
-            if (this.recognizedText) {
-                this.recognizedText.textContent = "Écoute...";
+            if (this.chordNotes) {
+                this.chordNotes.textContent = "Écoute...";
             }
         }
     }
 
     handleRecognitionResult(chord, text) {
-        // Mettre à jour l'affichage du texte reconnu
-        if (this.recognizedText) {
-            this.recognizedText.textContent = text;
-        }
-        
         // Si un accord a été reconnu
         if (chord) {
             // Afficher l'accord
-            if (this.chordDisplay) {
-                this.chordDisplay.textContent = chord.nom;
+            if (this.chordName) {
+                this.chordName.textContent = chord.nom;
             }
             
+            if (this.chordNotes) {
+                const notes = chord.notes?.length ? chord.notes.join(' • ') : 'Notes indisponibles';
+                const normalizedText = text?.trim();
+                const noteSuffix = normalizedText && normalizedText.toLowerCase() !== chord.nom.toLowerCase()
+                    ? ` (Reconnu : ${normalizedText})`
+                    : '';
+                this.chordNotes.textContent = `Notes : ${notes}${noteSuffix}`;
+            }
+
             // Jouer l'accord
             this.synthesizer.playChord(chord);
             
             // Ajouter l'accord à la séquence
             this.sequenceManager.addChord(chord);
-            this.updateSequenceDisplay();
         } else {
             // Aucun accord reconnu
-            if (this.chordDisplay) {
-                this.chordDisplay.textContent = "Accord non reconnu";
+            if (this.chordName) {
+                this.chordName.textContent = "Accord non reconnu";
+            }
+            if (this.chordNotes) {
+                this.chordNotes.textContent = text
+                    ? `Texte reconnu : ${text}`
+                    : "Aucun accord reconnu";
             }
         }
         
@@ -167,8 +179,8 @@ class UIController {
 
     handleRecognitionError(error) {
         // Afficher l'erreur
-        if (this.recognizedText) {
-            this.recognizedText.textContent = error;
+        if (this.chordNotes) {
+            this.chordNotes.textContent = error;
         }
         
         // Réinitialiser l'état d'écoute
@@ -180,34 +192,9 @@ class UIController {
     }
 
     updateSequenceDisplay() {
-        if (!this.sequenceContainer) return;
-        
-        // Vider le conteneur
-        this.sequenceContainer.innerHTML = '';
-        
-        // Si la séquence est vide
-        if (this.sequenceManager.sequence.length === 0) {
-            const emptyMessage = document.createElement('p');
-            emptyMessage.textContent = "La séquence est vide. Dictez des accords pour les ajouter.";
-            this.sequenceContainer.appendChild(emptyMessage);
-            return;
+        if (this.sequenceManager?.updateSequenceDisplay) {
+            this.sequenceManager.updateSequenceDisplay();
         }
-        
-        // Créer un élément pour chaque accord
-        this.sequenceManager.sequence.forEach((chord, index) => {
-            const chordElement = document.createElement('div');
-            chordElement.className = 'sequence-chord';
-            chordElement.textContent = chord.nom;
-            chordElement.dataset.index = index;
-            
-            // Ajouter un gestionnaire de clic pour supprimer l'accord
-            chordElement.addEventListener('click', () => {
-                this.sequenceManager.removeChord(index);
-                this.updateSequenceDisplay();
-            });
-            
-            this.sequenceContainer.appendChild(chordElement);
-        });
     }
 
     highlightPlayingChord(index) {
@@ -223,11 +210,11 @@ class UIController {
     }
 
     updateTempoDisplay() {
-        if (this.tempoInput) {
-            this.tempoInput.value = this.sequenceManager.tempo;
+        if (this.tempoSlider) {
+            this.tempoSlider.value = this.sequenceManager.tempo;
         }
         
-        const tempoDisplay = document.getElementById('tempo-display');
+        const tempoDisplay = document.getElementById('tempo-value');
         if (tempoDisplay) {
             tempoDisplay.textContent = `${this.sequenceManager.tempo} BPM`;
         }
@@ -244,9 +231,9 @@ class UIController {
             `;
             
             // Insérer avant le conteneur de l'application
-            const appContainer = document.getElementById('app-container');
-            if (appContainer) {
-                appContainer.parentNode.insertBefore(permissionRequest, appContainer);
+            const appSection = document.getElementById('app');
+            if (appSection) {
+                appSection.querySelector('.container')?.prepend(permissionRequest);
             } else {
                 document.body.insertBefore(permissionRequest, document.body.firstChild);
             }

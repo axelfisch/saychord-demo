@@ -14,7 +14,7 @@ class ChordDictionary {
      */
     async loadDictionary() {
         try {
-            const response = await fetch('/chord-dictionary.json');
+            const response = await fetch(new URL('../chord-dictionary.json', import.meta.url));
             if (!response.ok) {
                 throw new Error(`Erreur HTTP: ${response.status}`);
             }

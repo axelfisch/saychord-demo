@@ -9,6 +9,8 @@ class VoiceRecognition {
         this.isListening = false;
         this.onResultCallback = null;
         this.onErrorCallback = null;
+        this.onStartCallback = null;
+        this.onEndCallback = null;
         this.adapter = new VoiceRecognitionAdapter(); // Utilise l'adaptateur pour améliorer la reconnaissance
         this.setupRecognition();
     }
@@ -57,6 +59,9 @@ class VoiceRecognition {
             this.recognition.start();
             this.isListening = true;
             console.log("Reconnaissance vocale démarrée");
+            if (this.onStartCallback) {
+                this.onStartCallback();
+            }
             
             // Afficher une demande d'autorisation si nécessaire
             this.showPermissionRequest();
@@ -125,6 +130,17 @@ class VoiceRecognition {
     handleEnd() {
         this.isListening = false;
         console.log("Session de reconnaissance vocale terminée");
+        if (this.onEndCallback) {
+            this.onEndCallback();
+        }
+    }
+
+    onStart(callback) {
+        this.onStartCallback = callback;
+    }
+
+    onEnd(callback) {
+        this.onEndCallback = callback;
     }
 
     showPermissionRequest() {
@@ -135,7 +151,8 @@ class VoiceRecognition {
             
             // Ajouter un gestionnaire d'événements au bouton d'autorisation
             const permissionButton = permissionRequest.querySelector('button');
-            if (permissionButton) {
+            if (permissionButton && !permissionButton.dataset.listenerAdded) {
+                permissionButton.dataset.listenerAdded = 'true';
                 permissionButton.addEventListener('click', () => {
                     // Demander l'autorisation d'utiliser le microphone
                     navigator.mediaDevices.getUserMedia({ audio: true })
@@ -167,7 +184,7 @@ class VoiceRecognition {
         }
         
         // Afficher un message d'erreur dans l'interface
-        const appContainer = document.querySelector('#app-container');
+        const appContainer = document.querySelector('#app');
         if (appContainer) {
             const errorElement = document.createElement('div');
             errorElement.className = 'error-message';
