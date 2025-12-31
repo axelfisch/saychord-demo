@@ -170,7 +170,7 @@ class SequenceManager {
             
             // Arrêter le son
             if (this.synthesizer) {
-                this.synthesizer.stopAllOscillators();
+                this.synthesizer.stopAllNotes();
             }
             
             // Mettre à jour l'interface
@@ -427,6 +427,70 @@ class SequenceManager {
             return true;
         } catch (error) {
             console.error('Erreur lors de l\'export PDF :', error);
+            return false;
+        }
+    }
+
+    buildSequenceExport() {
+        const measures = this.splitSequenceIntoMeasures();
+
+        return {
+            tempo: this.tempo,
+            timeSignature: this.timeSignature,
+            loopLength: this.loopLength,
+            totalChords: this.sequence.length,
+            measures
+        };
+    }
+
+    splitSequenceIntoMeasures() {
+        if (this.sequence.length === 0) {
+            return [];
+        }
+
+        const measures = [];
+        let measureIndex = 1;
+
+        for (let i = 0; i < this.sequence.length; i += this.loopLength) {
+            const slice = this.sequence.slice(i, i + this.loopLength);
+            measures.push({
+                measure: measureIndex,
+                chords: slice.map((chord, index) => ({
+                    position: i + index + 1,
+                    name: chord.nom,
+                    notes: chord.notes || []
+                }))
+            });
+            measureIndex += 1;
+        }
+
+        return measures;
+    }
+
+    exportToJSON() {
+        try {
+            if (this.sequence.length === 0) {
+                console.warn('La séquence est vide, impossible d\'exporter');
+                alert('La séquence est vide. Veuillez ajouter des accords avant d\'exporter.');
+                return false;
+            }
+
+            const data = this.buildSequenceExport();
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'saychord-sequence.json';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+
+            console.log('Export JSON terminé');
+            return true;
+        } catch (error) {
+            console.error('Erreur lors de l\'export JSON :', error);
             return false;
         }
     }
